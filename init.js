@@ -9,6 +9,7 @@ window.onload =function() {
     // document.addEventListener("keypress",draw_path);
     // document.onctxmenu = onClick;
     // document.onmousedown = onClick;
+    document.addEventListener("mouseover", mouse)
     canv=document.getElementById("gc");
     ctx = canv.getContext("2d");
     ctx.canvas.width  = window.innerWidth;
@@ -26,6 +27,12 @@ class Tile{
 }
 
 board = [];
+
+
+function mouse(params) {
+    let x = event.clientX;
+    let y = event.clientY;
+}
 // ----------------init functions--------------------
 
 function init() {
