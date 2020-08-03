@@ -67,7 +67,7 @@ function init() {
 }
 function print_board(board)
 {
-    //drawing the frame
+    //------------------------drawing the frame----------------
     frame_size = 20;
     X_seperate = 8;
     Y_seperate = 15;
@@ -81,7 +81,8 @@ function print_board(board)
    
     ctx.fillRect((ctx.canvas.width/2)-3, 0, 8 , ctx.canvas.height);
  
-    //drawing the triangels
+
+    //------------------------drawing the triangels----------------
     let x = frame_size + X_seperate;
     let y = ctx.canvas.height-frame_size - 5; // 5 for seperation
     let width =  ctx.canvas.width;
@@ -100,6 +101,9 @@ function print_board(board)
         x += width + X_seperate+5;
         color = color == "black" ? "red" : "black";           
     }
+
+
+    //------------------------drawing the tiles----------------
     let radius = width*0.5;
     x = frame_size + X_seperate + 30;
     y = ctx.canvas.height- frame_size*2 - Y_seperate;
