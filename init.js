@@ -26,7 +26,6 @@ class Tile{
 }
 
 board = [];
-triangle_size = 0;
 // ----------------init functions--------------------
 
 function init() {
@@ -73,7 +72,8 @@ function print_board(board)
     ctx.fillRect(0, ctx.canvas.height-frame_size, ctx.canvas.width, frame_size);
     ctx.fillRect(ctx.canvas.width-frame_size, 0, frame_size, ctx.canvas.height);
    
-
+    ctx.fillRect((ctx.canvas.width/2)-3, 0, 8 , ctx.canvas.height);
+ 
     //drawing the triangels
     let x = frame_size + X_seperate;
     let y = ctx.canvas.height-frame_size - 5; // 5 for seperation
@@ -97,7 +97,6 @@ function print_board(board)
     x = frame_size + X_seperate + 30;
     y = ctx.canvas.height- frame_size*2 - Y_seperate;
     for (let i = 0; i < board.length/2; i++) {
-        //color = color == "white" ? "blue" : "white";
         for (let j = 0; j < board[i].length; j++) {
             if ( board[i] == "none") {
                 continue;
@@ -112,7 +111,6 @@ function print_board(board)
     y  = frame_size*2 + Y_seperate;
     //board.reverse();
     for (let i = board.length-1; i > (board.length/2)-1; i--) {
-        //color = color == "white" ? "blue" : "white";
         for (let j = 0; j < board[i].length; j++) {
             if ( board[i] == "none") {
                 continue;
