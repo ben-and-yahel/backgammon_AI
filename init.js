@@ -11,8 +11,9 @@ window.onload =function() {
     // document.onmousedown = onClick;
     canv=document.getElementById("gc");
     ctx = canv.getContext("2d");
-    ctx.canvas.width  = window.innerWidth;
-    ctx.canvas.height = window.innerHeight - strap_height;
+    //TODO: make the canvas size change according to window size
+    ctx.canvas.width  = 940;
+    ctx.canvas.height = 920 - strap_height;
     init();
     
 }
@@ -26,7 +27,11 @@ class Tile{
 }
 
 board = [];
-triangle_size = 0;
+
+function mouse(params) {
+    let x = event.clientX;
+    let y = event.clientY;
+}
 // ----------------init functions--------------------
 
 function init() {
@@ -73,6 +78,8 @@ function print_board(board)
     ctx.fillRect(0, ctx.canvas.height-frame_size, ctx.canvas.width, frame_size);
     ctx.fillRect(ctx.canvas.width-frame_size, 0, frame_size, ctx.canvas.height);
    
+    ctx.fillRect((ctx.canvas.width/2)-3, 0, 8 , ctx.canvas.height);
+
 
     //drawing the triangels
     let x = frame_size + X_seperate;
