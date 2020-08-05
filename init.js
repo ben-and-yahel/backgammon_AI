@@ -33,6 +33,7 @@ currTile = Object;
 function mouse(e) {
     let mouse_x = event.clientX;
     let mouse_y = event.clientY;
+
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         if(board[tiles_x] == "none")
             continue;
@@ -121,7 +122,7 @@ function print_board(board)
     //------------------------drawing the tiles----------------
     radius = width*0.5;
     x = frame_size + X_seperate + 30;
-    y = ctx.canvas.height- frame_size*2 - Y_seperate;
+    y = ctx.canvas.height- frame_size*2 - Y_seperate;//864
     save_j = 0;
     for (let i = 0; i < board.length/2; i++) {
         for (let j = 0; j < board[i].length; j++) {
@@ -129,15 +130,15 @@ function print_board(board)
                 continue;
             }
             board[i][j].x = x;
-            board[i][j].y = y;
+            board[i][j].y = y + radius*2;
             draw_tile(x, y, radius, board[i][j].color);
-            y -= radius + 30;
+            y -= radius*2;
            
         }
         y = ctx.canvas.height- frame_size*2 - Y_seperate;
         x += width + X_seperate + 5;
     }
-    x = frame_size + X_seperate + 30;
+    x = frame_size + X_seperate + radius;
     y  = frame_size*2 + Y_seperate;
    
     for (let i = board.length-1; i > (board.length/2)-1; i--) {
@@ -146,9 +147,9 @@ function print_board(board)
                 continue;
             }
             board[i][j].x = x;
-            board[i][j].y = y;
+            board[i][j].y = y + radius*2;
             draw_tile(x, y, radius, board[i][j].color);
-           y += radius + 30;
+           y += radius*2;
            
         }
         y =  frame_size*2 + Y_seperate;
