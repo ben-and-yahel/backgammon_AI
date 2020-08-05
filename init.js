@@ -20,17 +20,33 @@ window.onload =function() {
 strap_height = 65;
 
 class Tile{
-    constructor(color, position){
+    constructor(color, x = 0, y = 0){
         this.color = color;
-        this.position = position;
+        this.x = x;
+        this.y = y;
     }
 }
 
 board = [];
-
-function mouse(params) {
-    let x = event.clientX;
-    let y = event.clientY;
+let radius = 0;
+currTile = Object;
+function mouse(e) {
+    let mouse_x = event.clientX;
+    let mouse_y = event.clientY;
+    for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
+        if(board[tiles_x] == "none")
+            continue;
+        for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
+            if(board[tiles_x][tiles_y] == currTile)
+                continue;
+            if (mouse_x >= board[tiles_x][tiles_y].x - radius && mouse_x <= board[tiles_x][tiles_y].x + radius) {
+            if (mouse_y >= board[tiles_x][tiles_y].y - radius && mouse_y <= board[tiles_x][tiles_y].y + radius) {
+                console.log("hover");
+                currTile = board[tiles_x][tiles_y];
+                }
+            }
+        }
+    }
 }
 // ----------------init functions--------------------
 
@@ -66,7 +82,7 @@ function init() {
 }
 function print_board(board)
 {
-    //drawing the frame
+    //------------------------drawing the frame----------------
     frame_size = 20;
     X_seperate = 8;
     Y_seperate = 15;
@@ -81,7 +97,7 @@ function print_board(board)
     ctx.fillRect((ctx.canvas.width/2)-3, 0, 8 , ctx.canvas.height);
 
 
-    //drawing the triangels
+    //------------------------drawing the triangels----------------
     let x = frame_size + X_seperate;
     let y = ctx.canvas.height-frame_size - 5; // 5 for seperation
     let width =  ctx.canvas.width;
@@ -100,32 +116,40 @@ function print_board(board)
         x += width + X_seperate+5;
         color = color == "black" ? "red" : "black";           
     }
-    let radius = width*0.5;
+
+
+    //------------------------drawing the tiles----------------
+    radius = width*0.5;
     x = frame_size + X_seperate + 30;
     y = ctx.canvas.height- frame_size*2 - Y_seperate;
+    save_j = 0;
     for (let i = 0; i < board.length/2; i++) {
-        //color = color == "white" ? "blue" : "white";
         for (let j = 0; j < board[i].length; j++) {
             if ( board[i] == "none") {
                 continue;
             }
+            board[i][j].x = x;
+            board[i][j].y = y;
             draw_tile(x, y, radius, board[i][j].color);
-           y -= radius + 30;
+            y -= radius + 30;
+           
         }
         y = ctx.canvas.height- frame_size*2 - Y_seperate;
         x += width + X_seperate + 5;
     }
     x = frame_size + X_seperate + 30;
     y  = frame_size*2 + Y_seperate;
-    //board.reverse();
+   
     for (let i = board.length-1; i > (board.length/2)-1; i--) {
-        //color = color == "white" ? "blue" : "white";
         for (let j = 0; j < board[i].length; j++) {
-            if ( board[i] == "none") {
+            if (board[i] == "none") {
                 continue;
             }
+            board[i][j].x = x;
+            board[i][j].y = y;
             draw_tile(x, y, radius, board[i][j].color);
            y += radius + 30;
+           
         }
         y =  frame_size*2 + Y_seperate;
         x += width + X_seperate + 5;
