@@ -44,6 +44,7 @@ function mouse(e) {
             if (mouse_y >= board[tiles_x][tiles_y].y - radius && mouse_y <= board[tiles_x][tiles_y].y + radius) {
                 console.log("hover");
                 currTile = board[tiles_x][tiles_y];
+                print_board(board);
                 }
             }
         }
@@ -83,6 +84,8 @@ function init() {
 }
 function print_board(board)
 {
+    ctx.shadowBlur = 0;//stop glowing effect
+    ctx.shadowColor = "black";
     //------------------------drawing the frame----------------
     frame_size = 20;
     X_seperate = 8;
@@ -162,7 +165,20 @@ function draw_tile(x, y, radius, color) {
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = color;
+    //glowing effect
+    if(currTile && currTile.x == x && currTile.y == y + radius*2)
+    {
+
+        ctx.shadowBlur = 50;
+        ctx.shadowColor = "blue";
+    }
+    else //stop glowing effect
+    {
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = "black";
+    }
     ctx.fill();
+    
 }
 function draw_triangle(x, y, width, height, color, inverted=false)
 {
@@ -172,7 +188,6 @@ function draw_triangle(x, y, width, height, color, inverted=false)
         height_parameter *= -1;
         y = frame_size+ 5;
     }
-
     ctx.beginPath();
     ctx.moveTo(x, y);
     ctx.lineTo(x+width, y);
