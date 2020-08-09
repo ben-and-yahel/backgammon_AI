@@ -18,18 +18,37 @@ window.onload =function() {
     
 }
 strap_height = 65;
+board = [];
+radius = 0;
+currTile = Object;
 
 class Tile{
     constructor(color, x = 0, y = 0){
         this.color = color;
         this.x = x;
         this.y = y;
+        this.glow = false;
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y- radius*2, radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = this.color;
+        //glowing effect
+        if(this.glow)
+        {
+            ctx.shadowBlur = 50;
+            ctx.shadowColor = "blue";
+        }
+        else //stop glowing effect
+        {
+            ctx.shadowBlur = 0;
+            ctx.shadowColor = "black";
+        }
+        ctx.fill();
     }
 }
 
-board = [];
-let radius = 0;
-currTile = Object;
+
 function mouse(e) {
     let mouse_x = event.clientX;
     let mouse_y = event.clientY;
@@ -43,8 +62,16 @@ function mouse(e) {
             if (mouse_x >= board[tiles_x][tiles_y].x - radius && mouse_x <= board[tiles_x][tiles_y].x + radius) {
             if (mouse_y >= board[tiles_x][tiles_y].y - radius && mouse_y <= board[tiles_x][tiles_y].y + radius) {
                 console.log("hover");
+                if (currTile.glow == true) {
+                    currTile.glow = false;
+                    currTile.draw();
+                }
+
                 currTile = board[tiles_x][tiles_y];
-                print_board(board);
+                currTile.glow = true;
+                currTile.draw();
+                
+                //print_board(board);
                 }
             }
         }
@@ -134,7 +161,8 @@ function print_board(board)
             }
             board[i][j].x = x;
             board[i][j].y = y + radius*2;
-            draw_tile(x, y, radius, board[i][j].color);
+            board[i][j].draw();
+            //draw_tile(x, y, radius, board[i][j].color);
             y -= radius*2;
            
         }
@@ -151,7 +179,8 @@ function print_board(board)
             }
             board[i][j].x = x;
             board[i][j].y = y + radius*2;
-            draw_tile(x, y, radius, board[i][j].color);
+            board[i][j].draw();
+            //draw_tile(x, y, radius, board[i][j].color);
            y += radius*2;
            
         }
@@ -162,22 +191,6 @@ function print_board(board)
     
 }
 function draw_tile(x, y, radius, color) {
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-    ctx.fillStyle = color;
-    //glowing effect
-    if(currTile && currTile.x == x && currTile.y == y + radius*2)
-    {
-
-        ctx.shadowBlur = 50;
-        ctx.shadowColor = "blue";
-    }
-    else //stop glowing effect
-    {
-        ctx.shadowBlur = 0;
-        ctx.shadowColor = "black";
-    }
-    ctx.fill();
     
 }
 function draw_triangle(x, y, width, height, color, inverted=false)
