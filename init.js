@@ -209,9 +209,10 @@ function mouse(e) {
                     currTile.glow = false;
                     //currTile.draw();
                 }
-                print_board(board);
                 currTile = board[tiles_x][tiles_y];
                 currTile.glow = true;
+                print_board(board);
+                
                 }
             }
         }
