@@ -22,6 +22,7 @@ board = [];
 radius = 0;
 currTile = Object;
 cubes = [Object, Object];
+turn = "white";
 
 class Tile{
     constructor(color, x = 0, y = 0){
@@ -181,15 +182,10 @@ function mouseClick(e) {
         if(board[tiles_x] == "none")
             continue;
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
-            if(board[tiles_x][tiles_y] == currTile)
-                continue;
             if (mouse_x >= board[tiles_x][tiles_y].x - radius && mouse_x <= board[tiles_x][tiles_y].x + radius) {
             if (mouse_y >= board[tiles_x][tiles_y].y - radius && mouse_y <= board[tiles_x][tiles_y].y + radius) {
-                if (currTile.glow == true) {
-                    currTile.glow = false;
-                }
-
-                /*   code   */
+                currTile.color = "gray";
+                currTile.draw();
                 }
             }
         }
@@ -213,12 +209,9 @@ function mouse(e) {
                     currTile.glow = false;
                     //currTile.draw();
                 }
-
+                print_board(board);
                 currTile = board[tiles_x][tiles_y];
                 currTile.glow = true;
-                
-                
-                print_board(board);
                 }
             }
         }
@@ -276,7 +269,13 @@ function print_board(board)
     ctx.fillRect(ctx.canvas.width-frame_size, 0, frame_size, ctx.canvas.height);
    
     ctx.fillRect((ctx.canvas.width/2)-3, 0, 8 , ctx.canvas.height);
-    
+
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'black';
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(frame_size, frame_size);
+    ctx.stroke();
     //------------------------drawing the cubes----------------
     cubes[0].draw();
     cubes[1].draw();
@@ -350,6 +349,9 @@ function role() {
     cubes[1].shuffle();
     cubes[0].draw();
     cubes[1].draw();
+    headline = document.getElementById("welcome");
+    headline.innerHTML = "Its the "+turn+" turn!"; 
+    turn = turn == "white" ? "black" : "white";
 }
 function draw_tile(x, y, radius, color) {
     

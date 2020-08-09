@@ -56,6 +56,7 @@ html, body {
     color: white; 
     background-color:purple;
     font-family: Comic Sans MS;
+    font-size: xx-large;
 }
 .dropbtn {
   user-select: none;
