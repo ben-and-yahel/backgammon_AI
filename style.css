@@ -21,7 +21,7 @@ html, body {
   display: inline-block;
   left: 705px;
   top: 0px;
-  background-color: #7755a3;
+  background-color: #ff9900;
   color: white;
   padding: 14px;
   font-size: 12px;
@@ -54,7 +54,7 @@ html, body {
 #welcome{
     user-select: none;
     color: white; 
-    background-color:purple;
+    background-color: #ff9900;
     font-family: Comic Sans MS;
     font-size: xx-large;
 }

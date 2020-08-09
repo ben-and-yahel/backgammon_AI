@@ -17,7 +17,7 @@ window.onload =function() {
     init();
     
 }
-strap_height = 65;
+strap_height = 40;
 board = [];
 radius = 0;
 currTile = Object;
@@ -39,7 +39,7 @@ class Tile{
         if(this.glow)
         {
             ctx.shadowBlur = 50;
-            ctx.shadowColor = "blue";
+            ctx.shadowColor = "gray";
         }
         else //stop glowing effect
         {
@@ -173,6 +173,9 @@ class Cube{
         }
     }
 }
+function move(params) {
+    
+}
 
 function mouseClick(e) {
     let mouse_x = event.clientX;
@@ -182,8 +185,11 @@ function mouseClick(e) {
         if(board[tiles_x] == "none")
             continue;
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
+            if(board[tiles_x][tiles_y] == currTile && currTile.color == "gray")
+                continue;
             if (mouse_x >= board[tiles_x][tiles_y].x - radius && mouse_x <= board[tiles_x][tiles_y].x + radius) {
             if (mouse_y >= board[tiles_x][tiles_y].y - radius && mouse_y <= board[tiles_x][tiles_y].y + radius) {
+
                 currTile.color = "gray";
                 currTile.draw();
                 }
