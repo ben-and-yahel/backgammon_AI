@@ -15,7 +15,7 @@ html, body {
   font-size: 13px;
   border: none;
 }  
-#animation{
+#role{
   user-select: none;
   position: absolute;
   display: inline-block;
@@ -88,7 +88,7 @@ html, body {
     text-decoration: none;
     display: block;
   }
-  #animation:hover{background-color: #392e47;}
+  #role:hover{background-color: #392e47;}
   #template:hover{background-color: #392e47;}
 
   #reload:hover{background-color: #392e47;}

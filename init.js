@@ -21,6 +21,7 @@ strap_height = 65;
 board = [];
 radius = 0;
 currTile = Object;
+cubes = [Object, Object];
 
 class Tile{
     constructor(color, x = 0, y = 0){
@@ -44,10 +45,156 @@ class Tile{
             ctx.shadowBlur = 0;
             ctx.shadowColor = "black";
         }
+        
         ctx.fill();
+        ctx.closePath();
     }
 }
 
+class Cube{
+    constructor(state, seperate_x=0){
+        this.state = state;
+        this.cubeX = ctx.canvas.width/4 + seperate_x; // for the second cube
+        this.cubeY = ctx.canvas.height/2;
+        this.cueb_size = 40;
+    }
+    stageOne(){
+        ctx.beginPath();
+        ctx.arc(this.cubeX + this.cueb_size/2, this.cubeY + this.cueb_size/2, 2, 0, 2 * Math.PI, false);
+        
+        ctx.fill();
+        ctx.closePath();
+    }
+    stageTwo(){
+        ctx.beginPath();
+        ctx.arc(this.cubeX + this.cueb_size*0.2, this.cubeY + this.cueb_size*0.2, 2, 0, 2 * Math.PI, false);
+        ctx.arc(this.cubeX + this.cueb_size*0.8, this.cubeY + this.cueb_size*0.8, 2, 0, 2 * Math.PI, false);
+        
+        ctx.fill();
+        ctx.closePath();
+    }
+    stageThree(){
+        ctx.beginPath();
+        ctx.arc(this.cubeX + this.cueb_size/2, this.cubeY + this.cueb_size/2, 2, 0, 2 * Math.PI, false);
+        ctx.arc(this.cubeX + this.cueb_size*0.2, this.cubeY + this.cueb_size*0.2, 2, 0, 2 * Math.PI, false);
+        ctx.arc(this.cubeX + this.cueb_size*0.8, this.cubeY + this.cueb_size*0.8, 2, 0, 2 * Math.PI, false);
+   
+        ctx.fill();
+        ctx.closePath();
+    }
+    stageFour(){
+        ctx.beginPath();
+        ctx.arc(this.cubeX + this.cueb_size*0.8, this.cubeY + this.cueb_size*0.2, 2, 0, 2 * Math.PI, false);
+        ctx.arc(this.cubeX + this.cueb_size*0.8, this.cubeY + this.cueb_size*0.8, 2, 0, 2 * Math.PI, false);
+
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(this.cubeX + this.cueb_size*0.2, this.cubeY + this.cueb_size*0.2, 2, 0, 2 * Math.PI, false);
+        ctx.arc(this.cubeX + this.cueb_size*0.2, this.cubeY + this.cueb_size*0.8, 2, 0, 2 * Math.PI, false);
+
+        ctx.fill();
+        ctx.closePath();
+    }
+    stageFive(){
+        ctx.beginPath();
+        ctx.arc(this.cubeX + this.cueb_size*0.8, this.cubeY + this.cueb_size*0.2, 2, 0, 2 * Math.PI, false);
+        ctx.arc(this.cubeX + this.cueb_size*0.8, this.cubeY + this.cueb_size*0.8, 2, 0, 2 * Math.PI, false);
+
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(this.cubeX + this.cueb_size*0.2, this.cubeY + this.cueb_size*0.2, 2, 0, 2 * Math.PI, false);
+        ctx.arc(this.cubeX + this.cueb_size*0.2, this.cubeY + this.cueb_size*0.8, 2, 0, 2 * Math.PI, false);
+        
+
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(this.cubeX + this.cueb_size/2, this.cubeY + this.cueb_size/2, 2, 0, 2 * Math.PI, false);
+
+        ctx.fill();
+        ctx.closePath();
+    }
+    stageSix(){
+        ctx.beginPath();
+        ctx.arc(this.cubeX + this.cueb_size*0.8, this.cubeY + this.cueb_size*0.2, 2, 0, 2 * Math.PI, false);
+        ctx.arc(this.cubeX + this.cueb_size*0.8, this.cubeY + this.cueb_size*0.8, 2, 0, 2 * Math.PI, false);
+
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(this.cubeX + this.cueb_size*0.2, this.cubeY + this.cueb_size*0.2, 2, 0, 2 * Math.PI, false);
+        ctx.arc(this.cubeX + this.cueb_size*0.2, this.cubeY + this.cueb_size*0.8, 2, 0, 2 * Math.PI, false);
+        
+
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(this.cubeX + this.cueb_size*0.2, this.cubeY + this.cueb_size/2, 2, 0, 2 * Math.PI, false);
+        ctx.arc(this.cubeX + this.cueb_size*0.8, this.cubeY + this.cueb_size/2, 2, 0, 2 * Math.PI, false);
+
+        ctx.fill();
+        ctx.closePath();
+    }
+    shuffle(){
+        this.state =Math.floor(Math.random() * 6) + 1;
+    }
+    draw(){
+        ctx.fillStyle = "white";
+        ctx.fillRect(this.cubeX, this.cubeY, this.cueb_size, this.cueb_size);
+        ctx.strokeStyle = "black";
+        ctx.lineWidth   = 2;
+        ctx.strokeRect(this.cubeX, this.cubeY, this.cueb_size, this.cueb_size);
+        ctx.fillStyle = "black";
+        switch (this.state) {
+            case 1:
+                this.stageOne();
+                break;
+            case 2:
+                this.stageTwo();
+                break;
+            case 3:
+                this.stageThree();
+                break;
+            case 4:
+                this.stageFour();
+                break;
+            case 5:
+                this.stageFive();
+                break;
+            case 6:
+                this.stageSix();
+                break;
+        
+            default:
+                break;
+        }
+    }
+}
+
+function mouseClick(e) {
+    let mouse_x = event.clientX;
+    let mouse_y = event.clientY;
+
+    for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
+        if(board[tiles_x] == "none")
+            continue;
+        for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
+            if(board[tiles_x][tiles_y] == currTile)
+                continue;
+            if (mouse_x >= board[tiles_x][tiles_y].x - radius && mouse_x <= board[tiles_x][tiles_y].x + radius) {
+            if (mouse_y >= board[tiles_x][tiles_y].y - radius && mouse_y <= board[tiles_x][tiles_y].y + radius) {
+                if (currTile.glow == true) {
+                    currTile.glow = false;
+                }
+
+                /*   code   */
+                }
+            }
+        }
+    }        
+}
 
 function mouse(e) {
     let mouse_x = event.clientX;
@@ -64,14 +211,14 @@ function mouse(e) {
                 console.log("hover");
                 if (currTile.glow == true) {
                     currTile.glow = false;
-                    currTile.draw();
+                    //currTile.draw();
                 }
 
                 currTile = board[tiles_x][tiles_y];
                 currTile.glow = true;
-                currTile.draw();
                 
-                //print_board(board);
+                
+                print_board(board);
                 }
             }
         }
@@ -106,8 +253,11 @@ function init() {
     board.push("none");
     board.push([new Tile("black", 0), new Tile("black", 0)]);
     
+    cubes[1] = new Cube(Math.floor(Math.random() * 6) + 1, 50);
+    cubes[0] = new Cube(Math.floor(Math.random() * 6) + 1, 0);
     
     print_board(board);
+
 }
 function print_board(board)
 {
@@ -126,6 +276,10 @@ function print_board(board)
     ctx.fillRect(ctx.canvas.width-frame_size, 0, frame_size, ctx.canvas.height);
    
     ctx.fillRect((ctx.canvas.width/2)-3, 0, 8 , ctx.canvas.height);
+    
+    //------------------------drawing the cubes----------------
+    cubes[0].draw();
+    cubes[1].draw();
 
 
     //------------------------drawing the triangels----------------
@@ -189,6 +343,13 @@ function print_board(board)
     }
     
     
+}
+
+function role() {
+    cubes[0].shuffle();
+    cubes[1].shuffle();
+    cubes[0].draw();
+    cubes[1].draw();
 }
 function draw_tile(x, y, radius, color) {
     
