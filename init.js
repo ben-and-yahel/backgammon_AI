@@ -89,6 +89,41 @@ class Triangle{
         ctx.fillStyle = this.sign ? '#666666':this.color;
         ctx.fill();
     }
+        /* A utility function to calculate area of triangle formed by (x1, y1),  
+    (x2, y2) and (x3, y3) */ 
+    area(x1, y1, x2, y2, x3, y3) 
+    { 
+        return Math.abs((x1*(y2-y3) + x2*(y3-y1)+ x3*(y1-y2))/2.0); 
+    } 
+    
+    /* A function to check whether point P(x, y) lies inside the triangle formed  
+    by A(x1, y1), B(x2, y2) and C(x3, y3) */ 
+    isInside(x, y) 
+    {    
+        let height_parameter = this.height;
+
+        if (this.inverted) {
+            height_parameter *= -1;
+            this.y = this.frame_size+ 5;
+        }
+        let x1 = this.x, x3 = this.x+this.width,x2 = this.x+this.width/2;
+        let y1 = this.y, y3 = this.y, y2 = this.y - height_parameter;
+        /* Calculate area of triangle ABC */
+        
+        let A = this.area(x1, y1, x2, y2, x3, y3); 
+        
+        /* Calculate area of triangle PBC */   
+        let A1 = this.area(x, y, x2, y2, x3, y3); 
+        
+        /* Calculate area of triangle PAC */   
+        let A2 = this.area(x1, y1, x, y, x3, y3); 
+        
+        /* Calculate area of triangle PAB */    
+        let A3 = this.area(x1, y1, x2, y2, x, y); 
+            //console.log(A,A1+A2+A3);
+        /* Check if sum of A1, A2 and A3 is same as A */ 
+        return (A == A1 + A2 + A3); 
+    } 
 }
 
 class Cube{
@@ -253,7 +288,7 @@ function move(tiles_x ,tiles_y) {
 function mouseClick(e) {
     let mouse_x = event.clientX;
     let mouse_y = event.clientY;
-
+console.log(mouse_x,mouse_y)
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         if(board[tiles_x].tiles == [])
             continue;
@@ -280,7 +315,13 @@ function mouse(e) {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         if(board[tiles_x].tiles == [])
             continue;
-        for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
+        if(board[tiles_x].isInside(mouse_x,mouse_y))
+            {
+                console.log(board[tiles_x]);
+            }
+            
+            for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
+            
             if(board[tiles_x].tiles[tiles_y] == currTile)
                 continue;
             if (mouse_x >= board[tiles_x].tiles[tiles_y].x - radius && mouse_x <= board[tiles_x].tiles[tiles_y].x + radius) {
