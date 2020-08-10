@@ -248,7 +248,7 @@ class Cube{
     }
 }
 function validMove(number) {
-    if (number > 24 || number < 0) {
+    if (number > 23 || number < 0) {
         return false;
     }
     if (board[number].length == 0) {
@@ -266,15 +266,17 @@ function validMove(number) {
 }
 function move(tiles_x ,tiles_y) {
     minus = 1;
-    if (currTile.color == "black") {
+    if (currTile.color == "black" && tiles_x <12) 
         minus = -1;
-    }
     succseed = 0;
     moves = [];
-    moves[0] = tiles_x + (cubes[0].state) * minus;
-    moves[1] = tiles_x + (cubes[1].state) * minus;
-    moves[2] = tiles_x + (cubes[0].state + cubes[1].state) * minus;
+    moves[0] = tiles_x + (cubes[0].state * minus);
+    moves[1] = tiles_x + (cubes[1].state * minus);
+    moves[2] = tiles_x + ((cubes[0].state + cubes[1].state)* minus);
     for (let i = 0; i < moves.length; i++) {
+        // if (moves[i] > 11 && moves[i] < 24 && minus == 1)
+        //     moves[i] = 23 - (moves[i] % 12); 
+
         if(validMove(moves[i]) == false)
             continue;
         if(i==2 && succseed == 0)
@@ -355,18 +357,19 @@ function init() {
     board.push(new Triangle([], "red"));
     board.push(new Triangle());
     board.push(new Triangle([new Tile("white", 0), new Tile("white", 0), new Tile("white", 0), new Tile("white", 0), new Tile("white", 0)], "red"));
-    board.push(new Triangle([new Tile("black", 0), new Tile("black", 0), new Tile("black", 0), new Tile("black", 0), new Tile("black", 0)]));
-    board.push(new Triangle([], "red"));
+    
+    board.push(new Triangle([new Tile("black", 0), new Tile("black", 0)], "red"));
     board.push(new Triangle());
     board.push(new Triangle([], "red"));
-    board.push(new Triangle([new Tile("white", 0), new Tile("white", 0), new Tile("white", 0)]));
+    board.push(new Triangle());
     board.push(new Triangle([], "red"));
     board.push(new Triangle([new Tile("white", 0), new Tile("white", 0), new Tile("white", 0), new Tile("white", 0), new Tile("white", 0)]));
     board.push(new Triangle([], "red"));
-    board.push(new Triangle());
+    board.push(new Triangle([new Tile("white", 0), new Tile("white", 0), new Tile("white", 0)]));
     board.push(new Triangle([], "red"));
     board.push(new Triangle());
-    board.push(new Triangle([new Tile("black", 0), new Tile("black", 0)], "red"));
+    board.push(new Triangle([], "red"));
+    board.push(new Triangle([new Tile("black", 0), new Tile("black", 0), new Tile("black", 0), new Tile("black", 0), new Tile("black", 0)]));
     
     cubes[1] = new Cube(Math.floor(Math.random() * 6) + 1, 50);
     cubes[0] = new Cube(Math.floor(Math.random() * 6) + 1, 0);
@@ -384,22 +387,19 @@ function init_Triangels() {
     let width =  ctx.canvas.width;
     width = width/ 15.12903225806452; // TODO : change the formula
     const height = 200;
-    color = "black";
     for (let i = 0; i < 12; i++) {
         board[i].x = x;
         board[i].y = y;
         
         x += width + X_seperate+5;
-        //board[i].color = board[i].color == "black" ? "red" : "black";           
     }
+
     x = frame_size + X_seperate;
-    //color = color == "black" ? "red" : "black";
     for (let i = 12; i < 24; i++) {
         board[i].x = x;
         board[i].y = y;
         board[i].inverted = true;
-        x += width + X_seperate+5;
-        //board[i].color = board[i].color == "black" ? "red" : "black";      
+        x += width + X_seperate+5;     
     }
 }
 function print_board(board)
@@ -461,7 +461,7 @@ function print_board(board)
     x = frame_size + X_seperate + radius;
     y  = frame_size*2 + Y_seperate;
    
-    for (let i = board.length-1; i > (board.length/2)-1; i--) {
+    for (let i = board.length/2; i < board.length; i++) {
         for (let j = 0; j < board[i].length; j++) {
             if (board[i].tiles == []) {
                 continue;
