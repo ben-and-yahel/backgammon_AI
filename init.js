@@ -58,6 +58,7 @@ class Triangle{
         this.y = y;
         this.inverted = inverted;
         this.glow = false;
+        this.sign = false;
         
         this.frame_size = 20;
         this.width = ctx.canvas.width;
@@ -85,7 +86,7 @@ class Triangle{
         ctx.stroke();
 
         // the fill color
-        ctx.fillStyle = this.glow ? "#666666" : this.color;
+        ctx.fillStyle = this.sign ? '#666666':this.color;
         ctx.fill();
     }
 }
@@ -215,6 +216,17 @@ function validMove(number) {
     if (number > 24 || number < 0) {
         return false;
     }
+    if (board[number].length == 0) {
+        return true;
+    }
+    if(board[number].tiles[0].color == "black" && currTile.color == "white")
+    {
+        return false;
+    }
+    if(board[number].tiles[0].color == "white" && currTile.color == "black")
+    {
+        return false;
+    }
     return true;
 }
 function move(tiles_x ,tiles_y) {
@@ -222,12 +234,20 @@ function move(tiles_x ,tiles_y) {
     if (currTile.color == "black") {
         minus = -1;
     }
-     move3 = tiles_x + (cubes[0].state + cubes[1].state) * minus;
-     if(validMove(move3) == false)
-        return;
-     board[move3].glow = true;
-     board[move3].draw();
-     //draw_triangle(x, y, width, height, color);
+    succseed = 0;
+    moves = [];
+    moves[0] = tiles_x + (cubes[0].state) * minus;
+    moves[1] = tiles_x + (cubes[1].state) * minus;
+    moves[2] = tiles_x + (cubes[0].state + cubes[1].state) * minus;
+    for (let i = 0; i < moves.length; i++) {
+        if(validMove(moves[i]) == false)
+            continue;
+        if(i==2 && succseed == 0)
+            break
+        board[moves[i]].sign = true;
+        board[moves[i]].draw();
+        succseed++;
+    }
 }
 
 function mouseClick(e) {
@@ -426,5 +446,5 @@ function role() {
     cubes[1].draw();
     headline = document.getElementById("welcome");
     headline.innerHTML = "Its the "+turn+" turn!"; 
-    turn = turn == "white" ? "black" : "white";
+    //turn = turn == "white" ? "black" : "white";
 }
