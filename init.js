@@ -104,10 +104,11 @@ class Triangle{
 
         if (this.inverted) {
             height_parameter *= -1;
-            this.y = this.frame_size+ 5;
+            let ty = this.frame_size+ 5;
         }
+        
         let x1 = this.x, x3 = this.x+this.width,x2 = this.x+this.width/2;
-        let y1 = this.y, y3 = this.y, y2 = this.y - height_parameter;
+        let y1 = this.y + 25, y3 = this.y + 25, y2 = this.y + 25 - height_parameter;
         /* Calculate area of triangle ABC */
         
         let A = this.area(x1, y1, x2, y2, x3, y3); 
