@@ -17,6 +17,7 @@ window.onload =function() {
     init();
     
 }
+bbb = false;
 strap_height = 40;
 board = [];
 radius = 0;
@@ -69,7 +70,15 @@ class Triangle{
     }
     draw(){
         let height_parameter = this.height * Math.cos(Math.PI / 6);
-
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = "black";
+        //glowing effect
+        if(this.glow)
+        {
+            ctx.shadowBlur = 50;
+            ctx.shadowColor = "blue";
+        }
+        
         if (this.inverted) {
             height_parameter *= -1;
             this.y = this.frame_size+ 5;
@@ -88,12 +97,14 @@ class Triangle{
         // the fill color
         ctx.fillStyle = this.sign ? '#666666':this.color;
         ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = "black";
     }
         /* A utility function to calculate area of triangle formed by (x1, y1),  
     (x2, y2) and (x3, y3) */ 
     area(x1, y1, x2, y2, x3, y3) 
     { 
-        return Math.abs((x1*(y2-y3) + x2*(y3-y1)+ x3*(y1-y2))/2.0); 
+        return Math.floor( Math.abs((x1*(y2-y3) + x2*(y3-y1)+ x3*(y1-y2))/2.0)); 
     } 
     
     /* A function to check whether point P(x, y) lies inside the triangle formed  
@@ -108,7 +119,7 @@ class Triangle{
         }
         
         let x1 = this.x, x3 = this.x+this.width,x2 = this.x+this.width/2;
-        let y1 = this.y + 25, y3 = this.y + 25, y2 = this.y + 25 - height_parameter;
+        let y1 = this.y, y3 = this.y, y2 = this.y - height_parameter;
         /* Calculate area of triangle ABC */
         
         let A = this.area(x1, y1, x2, y2, x3, y3); 
@@ -121,9 +132,13 @@ class Triangle{
         
         /* Calculate area of triangle PAB */    
         let A3 = this.area(x1, y1, x2, y2, x, y); 
-            //console.log(A,A1+A2+A3);
+        if(bbb)
+        {
+            console.log(A,A1+A2+A3);
+            console.log(x1,y1,x2,y2,x3,y3,x,y);
+        }
         /* Check if sum of A1, A2 and A3 is same as A */ 
-        return (A == A1 + A2 + A3); 
+        return ((A + 3 >= A1 + A2 + A3 && A <= A1 + A2 + A3) || (A  <= A1 + A2 + A3 + 3 && A >= A1 + A2 + A3)); 
     } 
 }
 
@@ -289,6 +304,7 @@ function move(tiles_x ,tiles_y) {
 }
 
 function mouseClick(e) {
+    bbb=true;
     let mouse_x = event.clientX;
     let mouse_y = event.clientY;
 console.log(mouse_x,mouse_y)
@@ -318,13 +334,8 @@ function mouse(e) {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         if(board[tiles_x].tiles == [])
             continue;
-        if(board[tiles_x].isInside(mouse_x,mouse_y))
-            {
-                console.log(board[tiles_x]);
-            }
-            
-            for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
-            
+        board[tiles_x].glow = board[tiles_x].isInside(mouse_x,mouse_y - 5 - board[tiles_x].frame_size - strap_height) ? true : false; 
+        for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
             if(board[tiles_x].tiles[tiles_y] == currTile)
                 continue;
             if (mouse_x >= board[tiles_x].tiles[tiles_y].x - radius && mouse_x <= board[tiles_x].tiles[tiles_y].x + radius) {
@@ -336,12 +347,14 @@ function mouse(e) {
                 }
                 currTile = board[tiles_x].tiles[tiles_y];
                 currTile.glow = true;
-                print_board(board);
                 
                 }
             }
         }
     }
+    bbb=false;
+    print_board(board);
+
 }
 // ----------------init functions--------------------
 function init() {
