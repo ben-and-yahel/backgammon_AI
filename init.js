@@ -17,7 +17,6 @@ window.onload =function() {
     init();
     
 }
-bbb = false;
 strap_height = 40;
 board = [];
 radius = 0;
@@ -31,11 +30,15 @@ class Tile{
         this.x = x;
         this.y = y;
         this.glow = false;
+        this.sign = false;
     }
     draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y- radius*2, radius, 0, 2 * Math.PI, false);
         ctx.fillStyle = this.color;
+        if(this.sign)
+            ctx.fillStyle = "gray";
+
         //glowing effect
         if(this.glow)
         {
@@ -132,11 +135,7 @@ class Triangle{
         
         /* Calculate area of triangle PAB */    
         let A3 = this.area(x1, y1, x2, y2, x, y); 
-        if(bbb)
-        {
-            console.log(A,A1+A2+A3);
-            console.log(x1,y1,x2,y2,x3,y3,x,y);
-        }
+
         /* Check if sum of A1, A2 and A3 is same as A */ 
         return ((A + 3 >= A1 + A2 + A3 && A <= A1 + A2 + A3) || (A  <= A1 + A2 + A3 + 3 && A >= A1 + A2 + A3)); 
     } 
@@ -304,29 +303,52 @@ function move(tiles_x ,tiles_y) {
 }
 
 function mouseClick(e) {
-    bbb=true;
     let mouse_x = event.clientX;
     let mouse_y = event.clientY;
 console.log(mouse_x,mouse_y)
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         if(board[tiles_x].tiles == [])
             continue;
+        if(board[tiles_x].sign && board[tiles_x].isInside(mouse_x,mouse_y - 5 - board[tiles_x].frame_size - strap_height))
+        {
+            alert("move");
+            clean();
+        }
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
             if(board[tiles_x].tiles[tiles_y] == currTile && currTile.color == "gray")
                 continue;
             if (mouse_x >= board[tiles_x].tiles[tiles_y].x - radius && mouse_x <= board[tiles_x].tiles[tiles_y].x + radius) {
             if (mouse_y >= board[tiles_x].tiles[tiles_y].y - radius && mouse_y <= board[tiles_x].tiles[tiles_y].y + radius) {
 
-
+                clean();
                 move(tiles_x ,tiles_y);
-                currTile.color = "gray";
+                currTile.sign = true;
                 currTile.draw();
                 }
             }
         }
-    }        
+    }      
+    print_board(board)
+  
 }
-
+function clean()
+{
+    for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
+        board[tiles_x].sign = false; 
+        board[tiles_x].glow = false; 
+        if(board[tiles_x].tiles == [])
+            continue;
+        for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
+                board[tiles_x].tiles[tiles_y].sign = false;
+                board[tiles_x].tiles[tiles_y].glow = false;
+        }
+    }
+    if(currTile)
+    {
+        currTile.sign = false;
+        currTile.glow = false;
+    }
+}
 function mouse(e) {
     let mouse_x = event.clientX;
     let mouse_y = event.clientY;
@@ -334,7 +356,8 @@ function mouse(e) {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         if(board[tiles_x].tiles == [])
             continue;
-        board[tiles_x].glow = board[tiles_x].isInside(mouse_x,mouse_y - 5 - board[tiles_x].frame_size - strap_height) ? true : false; 
+        if(board[tiles_x].sign)
+            board[tiles_x].glow = board[tiles_x].isInside(mouse_x,mouse_y - 5 - board[tiles_x].frame_size - strap_height) ? true : false; 
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
             if(board[tiles_x].tiles[tiles_y] == currTile)
                 continue;
@@ -352,7 +375,6 @@ function mouse(e) {
             }
         }
     }
-    bbb=false;
     print_board(board);
 
 }
