@@ -1,7 +1,7 @@
 
 <html lang="en">
     <head>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="stylesheets/style.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>backgammon</title>
@@ -20,9 +20,12 @@
           <a onclick="algorithem(2);"href="#">Star algorithm</a>
         </div>
       </div> -->
-      <button id="role" onclick="role();">Role &#9733;</button>
-        <canvas id="gc" onmousemove="mouse(event)" onmouseout="undefined" onclick="mouseClick();"></canvas>
-        <script src="init.js" > </script>
+      <button id="role" onclick="role();">Roll &#9733;</button>
+        <canvas id="gc" onmousemove="mouse_hover(event)" onmouseout="undefined" onclick="mouseClick();"></canvas>
+        <script src="models/helper_functions.js"></script>
+        <script src="models/Classes.js"></script>
+        <script src="models/game.js"></script>
+        <script src="app.js" > </script>
     </body>
     
     </html>
