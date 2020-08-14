@@ -16,6 +16,9 @@ function move(tiles_x) {
             moves[i] = 23 - (moves[i] % 12); 
         if (moves[i] > 23 && currTile.color == "black" && minus == 1)
             moves[i] = 11 - (moves[i] % 12);
+        if (moves[i] < 12 && currTile.color == "white" && minus == -1)
+            continue;
+        
 
         if(validMove(moves[i]) == false)
             continue;

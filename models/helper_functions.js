@@ -13,6 +13,7 @@ function validMove(number) {
     {
         return false;
     }
+
     return true;
 }
 //returns a the loacation of the sign'ed tile for moving it.
