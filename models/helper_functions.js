@@ -56,6 +56,6 @@ function role() {
     cubes[0].draw();
     cubes[1].draw();
     headline = document.getElementById("welcome");
-    headline.innerHTML = "Its the "+turn+" turn!"; 
-    //turn = turn == "white" ? "black" : "white";
+    turn = turn == "white" ? "black" : "white";
+    headline.innerHTML = "Its the "+turn+" turn!";
 }
