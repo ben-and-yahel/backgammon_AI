@@ -71,7 +71,12 @@ function mouseClick(e) {
         }
     }      
     print_board(board)
-  
+    if(checkWin(turn))//check if someone won
+    {
+        headline = document.getElementById("welcome");
+        headline.innerHTML = turn+" won!";
+        alert(turn+" won!");
+    }
 }
 function mouse_hover(e) {
     let mouse_x = event.clientX;

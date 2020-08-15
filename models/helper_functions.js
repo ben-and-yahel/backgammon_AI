@@ -59,3 +59,14 @@ function role() {
     turn = turn == "white" ? "black" : "white";
     headline.innerHTML = "Its the "+turn+" turn!";
 }
+function checkWin(colorToCheck)
+{
+    
+    for (let x = 0; x < board.length; x++) {
+        if(board[x].length == 0)
+            continue;
+        if(board[x].tiles[0].color == colorToCheck)
+            return false;
+    }
+    return true;
+}
