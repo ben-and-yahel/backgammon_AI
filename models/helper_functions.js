@@ -5,6 +5,10 @@ function validMove(number) {
     if (board[number].length == 0) {
         return true;
     }
+    if(board[number].tiles.length == 1)
+    {
+        return true;
+    }
     if(board[number].tiles[0].color == "black" && currTile.color == "white")
     {
         return false;

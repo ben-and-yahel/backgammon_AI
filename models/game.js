@@ -40,6 +40,11 @@ function mouseClick(e) {
         if(board[tiles_x].sign && board[tiles_x].isInside(mouse_x,mouse_y - 5 - board[tiles_x].frame_size - strap_height))
         {
             let tiles_loc = find_sign_tile();
+            if(board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color)
+            {
+                board[tiles_x].tiles.splice(0, 1); // delets the old tile
+                board[tiles_x].length -= 1;
+            }
             board[tiles_x].tiles.push(board[tiles_loc[0]].tiles[tiles_loc[1]]);
             board[tiles_x].length += 1;
             //board[tiles_x].tiles[tiles_loc[1]].sign = false;
