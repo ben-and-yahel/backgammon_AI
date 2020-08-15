@@ -42,7 +42,7 @@ function mouseClick(e) {
             let tiles_loc = find_sign_tile();
             if(board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color)
             {
-                board[tiles_x].tiles.splice(0, 1); // delets the old tile
+                eats.push(board[tiles_x].tiles.splice(0, 1)); // eat
                 board[tiles_x].length -= 1;
             }
             board[tiles_x].tiles.push(board[tiles_loc[0]].tiles[tiles_loc[1]]);

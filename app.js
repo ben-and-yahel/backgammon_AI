@@ -13,7 +13,7 @@ board = [];
 currTile = Object;
 cubes = [Object, Object];
 turn = "white";
-
+eats = [];
 // ----------------init functions--------------------
 function init() {
     //makes the board
