@@ -51,6 +51,7 @@ function mouseClick(e) {
 
             board[tiles_loc[0]].tiles.splice(tiles_loc[1], 1); // delets the old tile
             board[tiles_loc[0]].length -= 1;
+            eatsPosition = false;
             clean();
             break;
             //alert("move");
@@ -63,9 +64,11 @@ function mouseClick(e) {
             if (mouse_y >= board[tiles_x].tiles[tiles_y].y - radius && mouse_y <= board[tiles_x].tiles[tiles_y].y + radius) {
 
                 clean();
+                currTile =  board[tiles_x].tiles[tiles_y];
                 move(tiles_x); // needes to get tiles_x for the calc
                 currTile.sign = true;
                 currTile.draw();
+                eatsPosition = true;
                 }
             }
         }
@@ -91,15 +94,17 @@ function mouse_hover(e) {
             if(board[tiles_x].tiles[tiles_y] == currTile)
                 continue;
             if (mouse_x >= board[tiles_x].tiles[tiles_y].x - radius && mouse_x <= board[tiles_x].tiles[tiles_y].x + radius) {
-            if (mouse_y >= board[tiles_x].tiles[tiles_y].y - radius && mouse_y <= board[tiles_x].tiles[tiles_y].y + radius) {
-                console.log("hover");
-                if (currTile.glow == true) {
-                    currTile.glow = false;
-                    //currTile.draw();
-                }
-                currTile = board[tiles_x].tiles[tiles_y];
-                currTile.glow = true;
-                
+                if (mouse_y >= board[tiles_x].tiles[tiles_y].y - radius && mouse_y <= board[tiles_x].tiles[tiles_y].y + radius) {
+                    console.log("hover");
+                    if (currTile.glow == true) {
+                        currTile.glow = false;
+                        //currTile.draw();
+                    }
+                    if(!eatsPosition)
+                    {
+                        currTile = board[tiles_x].tiles[tiles_y];
+                        currTile.glow = true;
+                    }
                 }
             }
         }

@@ -14,6 +14,7 @@ currTile = Object;
 cubes = [Object, Object];
 turn = "white";
 eats = [];
+eatsPosition = false;
 // ----------------init functions--------------------
 function init() {
     //makes the board
