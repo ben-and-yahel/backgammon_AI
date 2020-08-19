@@ -45,6 +45,7 @@ class Triangle{
         this.height = 200;
         this.tiles = tiles;
         this.length = tiles.length;
+        this.cube_number = 0;
     }
     draw(){
         let height_parameter = this.height * Math.cos(Math.PI / 6);
@@ -121,6 +122,7 @@ class Cube{
         this.cubeX = ctx.canvas.width/4 + seperate_x; // for the second cube
         this.cubeY = ctx.canvas.height/2;
         this.cueb_size = 40;
+        this.fill_color = "white";
     }
     stageOne(){
         ctx.beginPath();
@@ -203,9 +205,14 @@ class Cube{
     }
     shuffle(){
         this.state =Math.floor(Math.random() * 6) + 1;
+        this.fill_color = "white";
+    }
+    dark_mode(){
+        this.fill_color = "grey";
+        this.draw();
     }
     draw(){
-        ctx.fillStyle = "white";
+        ctx.fillStyle = this.fill_color;
         ctx.fillRect(this.cubeX, this.cubeY, this.cueb_size, this.cueb_size);
         ctx.strokeStyle = "black";
         ctx.lineWidth   = 2;

@@ -5,6 +5,7 @@ function validMove(number) {
     if (board[number].length == 0) {
         return true;
     }
+
     if(board[number].tiles.length == 1)
     {
         return true;
@@ -61,7 +62,6 @@ function role() {
 }
 function checkWin(colorToCheck)
 {
-    
     for (let x = 0; x < board.length; x++) {
         if(board[x].length == 0)
             continue;

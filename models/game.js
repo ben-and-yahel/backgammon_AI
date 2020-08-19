@@ -19,17 +19,26 @@ function move(tiles_x) {
         if (moves[i] < 12 && currTile.color == "white" && minus == -1)
             continue;
         
+        //TODO: clean code
+        if (board[moves[i]].cube_number == 2 && (cubes[0].fill_color == "grey" || cubes[1].fill_color == "grey" )) {
+            continue;
+        }
+        else if (cubes[board[moves[i]].cube_number].fill_color == "grey") {
+           continue;
+        }
+
 
         if(validMove(moves[i]) == false)
             continue;
         if(i==2 && succseed == 0)
             break
         board[moves[i]].sign = true;
+        board[moves[i]].cube_number = i;
         board[moves[i]].draw();
         succseed++;
     }
 }
-
+//TODO: clean this!
 function mouseClick(e) {
     let mouse_x = event.clientX;
     let mouse_y = event.clientY;
@@ -39,18 +48,28 @@ function mouseClick(e) {
         //TODO: doc this!!
         if(board[tiles_x].sign && board[tiles_x].isInside(mouse_x,mouse_y - 5 - board[tiles_x].frame_size - strap_height))
         {
-            let tiles_loc = find_sign_tile();
+            let tiles_location = find_sign_tile();
             if(board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color)
             {
                 eats.push(board[tiles_x].tiles.splice(0, 1)); // eat
                 board[tiles_x].length -= 1;
             }
-            board[tiles_x].tiles.push(board[tiles_loc[0]].tiles[tiles_loc[1]]);
+            board[tiles_x].tiles.push(board[tiles_location[0]].tiles[tiles_location[1]]);
             board[tiles_x].length += 1;
-            //board[tiles_x].tiles[tiles_loc[1]].sign = false;
+            if (board[tiles_x].cube_number == 2) {
+                cubes[0].dark_mode();
+                cubes[1].dark_mode();
+            }
+            else{
+                cubes[board[tiles_x].cube_number].dark_mode();
+            }
+            if (cubes[0].fill_color == "grey" && cubes[1].fill_color == "grey") {
+                role();
+            }
+            //board[tiles_x].tiles[tiles_location[1]].sign = false;
 
-            board[tiles_loc[0]].tiles.splice(tiles_loc[1], 1); // delets the old tile
-            board[tiles_loc[0]].length -= 1;
+            board[tiles_location[0]].tiles.splice(tiles_location[1], 1); // delets the old tile
+            board[tiles_location[0]].length -= 1;
             eatsPosition = false;
             clean();
             break;
@@ -73,7 +92,7 @@ function mouseClick(e) {
             }
         }
     }      
-    print_board(board)
+    print_board(board);
     if(checkWin(turn))//check if someone won
     {
         headline = document.getElementById("welcome");
@@ -81,6 +100,7 @@ function mouseClick(e) {
         alert(turn+" won!");
     }
 }
+//TODO: ADD HELPER FUNCTION
 function mouse_hover(e) {
     let mouse_x = event.clientX;
     let mouse_y = event.clientY;
@@ -96,12 +116,11 @@ function mouse_hover(e) {
                 continue;
             if (mouse_x >= board[tiles_x].tiles[tiles_y].x - radius && mouse_x <= board[tiles_x].tiles[tiles_y].x + radius) {
                 if (mouse_y >= board[tiles_x].tiles[tiles_y].y - radius && mouse_y <= board[tiles_x].tiles[tiles_y].y + radius) {
-                    console.log("hover");
                     if (currTile.glow == true) {
                         currTile.glow = false;
                         //currTile.draw();
                     }
-                    if(!eatsPosition)
+                    if(!eatsPosition && turn == board[tiles_x].tiles[tiles_y].color)
                     {
                         currTile = board[tiles_x].tiles[tiles_y];
                         currTile.glow = true;
