@@ -3,7 +3,7 @@ the function is called once the player clicks on tile and wants to view his move
 */
 function move(tiles_x) {
     minus = 1;  //In some scenarios we need to reverse the calaculation of the move
-    if ((currTile.color == "black" && tiles_x <12 || currTile.color == "white" && tiles_x >12)) 
+    if ((currTile.color == "black" && tiles_x <=12 || currTile.color == "white" && tiles_x >=12)) 
         minus = -1;
     succseed = 0;
     moves = [];
@@ -88,6 +88,7 @@ function mouse_hover(e) {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         if(board[tiles_x].tiles == [])
             continue;
+        //TODO: DOC THIS
         if(board[tiles_x].sign)
             board[tiles_x].glow = board[tiles_x].isInside(mouse_x,mouse_y - 5 - board[tiles_x].frame_size - strap_height) ? true : false; 
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
