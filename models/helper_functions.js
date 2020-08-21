@@ -1,12 +1,14 @@
-function validMove(number) {
+function validMove(number, moves, move_number) {
     if (number > 23 || number < 0) {
         return false;
     }
-    if (board[number].length == 0) {
-        return true;
+    if (move_number==2 && (cubes[0].fill_color == "grey" || cubes[1].fill_color == "grey" )) {
+        return false;
     }
-
-    if(board[number].tiles.length == 1)
+    else if (cubes[board[moves[move_number]].cube_number].fill_color == "grey") {
+       return false;
+    }
+    if(board[number].tiles.length <= 1)
     {
         return true;
     }
@@ -37,11 +39,13 @@ function clean()
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         board[tiles_x].sign = false; 
         board[tiles_x].glow = false; 
+        board[tiles_x].cube_number = 0;
         if(board[tiles_x].tiles == [])
             continue;
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
                 board[tiles_x].tiles[tiles_y].sign = false;
                 board[tiles_x].tiles[tiles_y].glow = false;
+                
         }
     }
     if(currTile)

@@ -3,7 +3,7 @@ the function is called once the player clicks on tile and wants to view his move
 */
 function move(tiles_x) {
     minus = 1;  //In some scenarios we need to reverse the calaculation of the move
-    if ((currTile.color == "black" && tiles_x <=12 || currTile.color == "white" && tiles_x >=12)) 
+    if ((currTile.color == "black" && tiles_x <12 || currTile.color == "white" && tiles_x >=12)) 
         minus = -1;
     succseed = 0;
     moves = [];
@@ -20,17 +20,11 @@ function move(tiles_x) {
             continue;
         
         //TODO: clean code
-        if (board[moves[i]].cube_number == 2 && (cubes[0].fill_color == "grey" || cubes[1].fill_color == "grey" )) {
-            continue;
-        }
-        else if (cubes[board[moves[i]].cube_number].fill_color == "grey") {
-           continue;
-        }
+        isValid = validMove(moves[i], moves, i);
 
-
-        if(validMove(moves[i]) == false)
+        if(isValid == false)
             continue;
-        if(i==2 && succseed == 0)
+        if(i==2 && succseed == 0) // In case of the first and second move dosen't work
             break
         board[moves[i]].sign = true;
         board[moves[i]].cube_number = i;
@@ -38,60 +32,86 @@ function move(tiles_x) {
         succseed++;
     }
 }
-//TODO: clean this!
-function mouseClick(e) {
-    let mouse_x = event.clientX;
-    let mouse_y = event.clientY;
+function draw_move_options(tiles_x, tiles_y){
+    clean();
+    if (board[tiles_x].tiles[tiles_y].color != turn) {
+        return;
+    }
+    currTile =  board[tiles_x].tiles[tiles_y];
+    move(tiles_x); // needes to get tiles_x for the calc
+    currTile.sign = true;
+    currTile.draw();
+    eatsPosition = true;
+}
+function tile_to_triangle(tiles_x) {
+    let tiles_location = find_sign_tile();
+
+    if(board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color)
+    {
+        eats.push(board[tiles_x].tiles.splice(0, 1)); // eat
+        board[tiles_x].length -= 1;
+    }
+    board[tiles_x].tiles.push(board[tiles_location[0]].tiles[tiles_location[1]]);
+    board[tiles_x].length += 1;
+    if (board[tiles_x].cube_number == 2) {
+        cubes[0].dark_mode();
+        cubes[1].dark_mode();
+    }
+    else{
+        cubes[board[tiles_x].cube_number].dark_mode();
+    }
+    if (cubes[0].fill_color == "grey" && cubes[1].fill_color == "grey") {
+        role();
+    }
+
+    board[tiles_location[0]].tiles.splice(tiles_location[1], 1); // delets the old tile
+    board[tiles_location[0]].length -= 1;
+    eatsPosition = false;
+    clean();
+            
+}
+function find_triangle_by_cordinates(mouse_x, mouse_y) {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         if(board[tiles_x].tiles == [])
             continue;
         //TODO: doc this!!
         if(board[tiles_x].sign && board[tiles_x].isInside(mouse_x,mouse_y - 5 - board[tiles_x].frame_size - strap_height))
         {
-            let tiles_location = find_sign_tile();
-            if(board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color)
-            {
-                eats.push(board[tiles_x].tiles.splice(0, 1)); // eat
-                board[tiles_x].length -= 1;
-            }
-            board[tiles_x].tiles.push(board[tiles_location[0]].tiles[tiles_location[1]]);
-            board[tiles_x].length += 1;
-            if (board[tiles_x].cube_number == 2) {
-                cubes[0].dark_mode();
-                cubes[1].dark_mode();
-            }
-            else{
-                cubes[board[tiles_x].cube_number].dark_mode();
-            }
-            if (cubes[0].fill_color == "grey" && cubes[1].fill_color == "grey") {
-                role();
-            }
-            //board[tiles_x].tiles[tiles_location[1]].sign = false;
-
-            board[tiles_location[0]].tiles.splice(tiles_location[1], 1); // delets the old tile
-            board[tiles_location[0]].length -= 1;
-            eatsPosition = false;
-            clean();
-            break;
-            //alert("move");
-            
+            return tiles_x;
         }
+    }
+    return false;
+}
+function find_tile_by_cordinates(mouse_x, mouse_y) {
+    for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
             if(board[tiles_x].tiles[tiles_y] == currTile && currTile.color == "gray")
                 continue;
             if (mouse_x >= board[tiles_x].tiles[tiles_y].x - radius && mouse_x <= board[tiles_x].tiles[tiles_y].x + radius) {
-            if (mouse_y >= board[tiles_x].tiles[tiles_y].y - radius && mouse_y <= board[tiles_x].tiles[tiles_y].y + radius) {
-
-                clean();
-                currTile =  board[tiles_x].tiles[tiles_y];
-                move(tiles_x); // needes to get tiles_x for the calc
-                currTile.sign = true;
-                currTile.draw();
-                eatsPosition = true;
+                if (mouse_y >= board[tiles_x].tiles[tiles_y].y - radius && mouse_y <= board[tiles_x].tiles[tiles_y].y + radius) {
+                    return [tiles_x, tiles_y];
                 }
             }
         }
-    }      
+    }
+    return false;
+}
+function mouseClick(e) {
+    let mouse_x = event.clientX;
+    let mouse_y = event.clientY;
+    if(currTile.sign == true)
+    {
+        tiles_x = find_triangle_by_cordinates(mouse_x, mouse_y);
+        if(tiles_x)
+            tile_to_triangle(tiles_x);
+    }    
+    else{
+        cordinates = find_tile_by_cordinates(mouse_x, mouse_y);
+        if(cordinates)
+            draw_move_options(cordinates[0], cordinates[1]); // cordinates => [tiles_X, tiles_Y]
+    }  
+
+
     print_board(board);
     if(checkWin(turn))//check if someone won
     {
