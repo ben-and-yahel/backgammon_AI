@@ -36,7 +36,7 @@ function clean()
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         board[tiles_x].sign = false; 
         board[tiles_x].glow = false; 
-        board[tiles_x].cube_number = 0;
+        board[tiles_x].cube_number = -99;
         if(board[tiles_x].tiles == [])
             continue;
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {

@@ -45,7 +45,7 @@ class Triangle{
         this.height = 200;
         this.tiles = tiles;
         this.length = tiles.length;
-        this.cube_number = 0;
+        this.cube_number = -99;
     }
     draw(){
         let height_parameter = this.height * Math.cos(Math.PI / 6);

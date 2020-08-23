@@ -38,10 +38,46 @@ function move(tiles_x) {
         if(i==2 && succseed == 0) // In case of the first and second move dosen't work
             break
         board[moves[i]].sign = true;
-        board[moves[i]].cube_number = i;
+        if (moves.length == 1) {
+            board[moves[i]].cube_number = 100; // stands for turn pass after the move
+        } else {
+            board[moves[i]].cube_number = i;
+        }
+        
         board[moves[i]].draw();
         succseed++;
     }
+}
+function tile_to_triangle(tiles_x) {
+    let tiles_location = find_sign_tile();
+
+    if(board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color)
+    {
+        eats.push(board[tiles_x].tiles.splice(0, 1)); // eat
+        board[tiles_x].length -= 1;
+    }
+    board[tiles_x].tiles.push(board[tiles_location[0]].tiles[tiles_location[1]]);
+    board[tiles_x].length += 1;
+
+
+    if (board[tiles_x].cube_number == 2 || board[tiles_x].cube_number==100) {
+        cubes[0].dark_mode();
+        cubes[1].dark_mode();
+    }
+    else{
+        cubes[board[tiles_x].cube_number].dark_mode();
+    }
+
+
+    if (cubes[0].fill_color == "grey" && cubes[1].fill_color == "grey") {
+        role();
+    }
+
+    board[tiles_location[0]].tiles.splice(tiles_location[1], 1); // delets the old tile
+    board[tiles_location[0]].length -= 1;
+    eatsPosition = false;
+    clean();
+            
 }
 function draw_move_options(tiles_x, tiles_y){
     clean();
@@ -54,33 +90,7 @@ function draw_move_options(tiles_x, tiles_y){
     currTile.draw();
     eatsPosition = true;
 }
-function tile_to_triangle(tiles_x) {
-    let tiles_location = find_sign_tile();
 
-    if(board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color)
-    {
-        eats.push(board[tiles_x].tiles.splice(0, 1)); // eat
-        board[tiles_x].length -= 1;
-    }
-    board[tiles_x].tiles.push(board[tiles_location[0]].tiles[tiles_location[1]]);
-    board[tiles_x].length += 1;
-    if (board[tiles_x].cube_number == 2) {
-        cubes[0].dark_mode();
-        cubes[1].dark_mode();
-    }
-    else{
-        cubes[board[tiles_x].cube_number].dark_mode();
-    }
-    if (cubes[0].fill_color == "grey" && cubes[1].fill_color == "grey") {
-        role();
-    }
-
-    board[tiles_location[0]].tiles.splice(tiles_location[1], 1); // delets the old tile
-    board[tiles_location[0]].length -= 1;
-    eatsPosition = false;
-    clean();
-            
-}
 function find_triangle_by_cordinates(mouse_x, mouse_y) {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         if(board[tiles_x].tiles == [])
@@ -119,7 +129,7 @@ function mouseClick(e) {
 
     else if(currTile.sign == true) { // sign == is marked and was clicked
         tiles_x = find_triangle_by_cordinates(mouse_x, mouse_y);
-        if(tiles_x)
+        if(tiles_x >= 0)
             tile_to_triangle(tiles_x);
     }
 
