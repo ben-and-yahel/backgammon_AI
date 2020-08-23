@@ -60,15 +60,24 @@ function draw_move_options(tiles_x, tiles_y){
     currTile.draw();
     eatsPosition = true;
 }
+function draw_eaten() {
+    return false;
+}
+function eat(tiles_x) {
+    // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
+    eaten_tiles[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles.splice(0, 1));
+    board[tiles_x].length -= 1;
+}
 function tile_to_triangle(tiles_x) {
     let tiles_location = find_sign_tile();
-
+    x_tile = tiles_location[0];
+    y_tile = tiles_location[1];
     if(board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color)
     {
-        eats.push(board[tiles_x].tiles.splice(0, 1)); // eat
-        board[tiles_x].length -= 1;
+        eat(tiles_x);
     }
-    board[tiles_x].tiles.push(board[tiles_location[0]].tiles[tiles_location[1]]);
+    
+    board[tiles_x].tiles.push(board[x_tile].tiles[y_tile]); //ads the new tile to the triangle
     board[tiles_x].length += 1;
 
 
@@ -85,8 +94,8 @@ function tile_to_triangle(tiles_x) {
         role();
     }
 
-    board[tiles_location[0]].tiles.splice(tiles_location[1], 1); // delets the old tile
-    board[tiles_location[0]].length -= 1;
+    board[x_tile].tiles.splice(y_tile, 1); // delets the old tile
+    board[x_tile].length -= 1;
     eatsPosition = false;
     clean();
             
@@ -131,7 +140,6 @@ function mouseClick(e) {
         if(tiles_x >= 0)
             tile_to_triangle(tiles_x);
     }
-
 
 
     print_board(board);
