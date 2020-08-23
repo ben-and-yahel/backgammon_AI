@@ -48,6 +48,18 @@ function move(tiles_x) {
         succseed++;
     }
 }
+
+function draw_move_options(tiles_x, tiles_y){
+    clean();
+    if (board[tiles_x].tiles[tiles_y].color != turn) {
+        return;
+    }
+    currTile =  board[tiles_x].tiles[tiles_y];
+    move(tiles_x); // needes to get tiles_x for the calc
+    currTile.sign = true;
+    currTile.draw();
+    eatsPosition = true;
+}
 function tile_to_triangle(tiles_x) {
     let tiles_location = find_sign_tile();
 
@@ -79,18 +91,6 @@ function tile_to_triangle(tiles_x) {
     clean();
             
 }
-function draw_move_options(tiles_x, tiles_y){
-    clean();
-    if (board[tiles_x].tiles[tiles_y].color != turn) {
-        return;
-    }
-    currTile =  board[tiles_x].tiles[tiles_y];
-    move(tiles_x); // needes to get tiles_x for the calc
-    currTile.sign = true;
-    currTile.draw();
-    eatsPosition = true;
-}
-
 function find_triangle_by_cordinates(mouse_x, mouse_y) {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         if(board[tiles_x].tiles == [])
@@ -123,12 +123,11 @@ function mouseClick(e) {
 
 
     cordinates = find_tile_by_cordinates(mouse_x, mouse_y);
-    if(cordinates){
+    tiles_x = find_triangle_by_cordinates(mouse_x, mouse_y);
+    if(cordinates && tiles_x == false || board[tiles_x].cube_number < 0){
         draw_move_options(cordinates[0], cordinates[1]); // cordinates => [tiles_X, tiles_Y]
     }
-
     else if(currTile.sign == true) { // sign == is marked and was clicked
-        tiles_x = find_triangle_by_cordinates(mouse_x, mouse_y);
         if(tiles_x >= 0)
             tile_to_triangle(tiles_x);
     }
