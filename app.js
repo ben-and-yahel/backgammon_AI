@@ -48,7 +48,9 @@ function init() {
     cubes[1] = new Cube(Math.floor(Math.random() * 6) + 1, 50);
     
     eaten_tiles["white"] = []; // sets 2 lists for the tiles that will get out
+    eaten_tiles["white"].push(new Tile("white", 0));
     eaten_tiles["black"] = [];
+    eaten_tiles["black"].push(new Tile("black", 0));
     init_Triangels();
     print_board(board);
 }
@@ -151,5 +153,20 @@ function print_board(board)
         x +=  board[0].width + X_seperate + 5;
     }
     //------------------------drawing the eaten tiles----------------
-    eaten_tiles();
+    x = ctx.canvas.width/2;
+    y = ctx.canvas.height/2 + frame_size;
+    if (eaten_tiles["black"].length) {
+        eaten_tiles["black"][0].x = x;
+        eaten_tiles["black"][0].y = y;
+        eaten_tiles["black"][0].draw();
+    }
+    
+    if (eaten_tiles["white"].length) {
+        y += radius*2 + Y_seperate;
+        eaten_tiles["white"][0].x = x;
+        eaten_tiles["white"][0].y = y;
+        eaten_tiles["white"][0].draw();
+    }
+
+   
 }
