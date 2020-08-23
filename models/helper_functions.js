@@ -5,9 +5,6 @@ function validMove(number, moves, move_number) {
     if (move_number==2 && (cubes[0].fill_color == "grey" || cubes[1].fill_color == "grey" )) {
         return false;
     }
-    else if (cubes[board[moves[move_number]].cube_number].fill_color == "grey") {
-       return false;
-    }
     if(board[number].tiles.length <= 1)
     {
         return true;

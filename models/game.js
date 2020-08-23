@@ -1,15 +1,26 @@
 /*
 the function is called once the player clicks on tile and wants to view his move options
 */
+function set_moves_by_cubes(tiles_x, minus) {
+    moves = [];
+    if (cubes[0].fill_color != "grey") {
+        moves.push([tiles_x + (cubes[0].state * minus)]);
+    }
+    if (cubes[1].fill_color != "grey") {
+        moves.push([tiles_x + (cubes[1].state * minus)]);
+    }
+    if (cubes[0].fill_color != "grey" && cubes[1].fill_color != "grey"){
+        moves.push([tiles_x + ((cubes[0].state + cubes[1].state)* minus)])
+    }
+    return moves;
+}
 function move(tiles_x) {
     minus = 1;  //In some scenarios we need to reverse the calaculation of the move
     if ((currTile.color == "black" && tiles_x <12 || currTile.color == "white" && tiles_x >=12)) 
         minus = -1;
     succseed = 0;
-    moves = [];
-    moves[0] = tiles_x + (cubes[0].state * minus);
-    moves[1] = tiles_x + (cubes[1].state * minus);
-    moves[2] = tiles_x + ((cubes[0].state + cubes[1].state)* minus);
+    moves = set_moves_by_cubes(tiles_x, minus);
+    
     for (let i = 0; i < moves.length; i++) {
          //In some scenario we need to modulo the cubes and reverse them
         if (moves[i] > 11 && currTile.color == "white" && minus == 1)
@@ -99,17 +110,19 @@ function find_tile_by_cordinates(mouse_x, mouse_y) {
 function mouseClick(e) {
     let mouse_x = event.clientX;
     let mouse_y = event.clientY;
-    if(currTile.sign == true)
-    {
+
+
+    cordinates = find_tile_by_cordinates(mouse_x, mouse_y);
+    if(cordinates){
+        draw_move_options(cordinates[0], cordinates[1]); // cordinates => [tiles_X, tiles_Y]
+    }
+
+    else if(currTile.sign == true) { // sign == is marked and was clicked
         tiles_x = find_triangle_by_cordinates(mouse_x, mouse_y);
         if(tiles_x)
             tile_to_triangle(tiles_x);
-    }    
-    else{
-        cordinates = find_tile_by_cordinates(mouse_x, mouse_y);
-        if(cordinates)
-            draw_move_options(cordinates[0], cordinates[1]); // cordinates => [tiles_X, tiles_Y]
-    }  
+    }
+
 
 
     print_board(board);
