@@ -2,8 +2,10 @@
 the function is called once the player clicks on tile and wants to view his move options
 */
 double_cubes = -99;
+all_tiles_in = false;
 function set_moves_by_cubes(tiles_x, minus) {
     moves = [];
+    //TODO: duoble two moves bug
     if (cubes[0].state == cubes[1].state) { // double situation
         moves.push([tiles_x + (cubes[0].state * minus)]);
 
@@ -12,6 +14,10 @@ function set_moves_by_cubes(tiles_x, minus) {
         
         return moves;
     }
+    if(all_tiles_in){
+        //TODO:in
+    }
+
     if (cubes[0].fill_color != "grey") {
         moves.push([tiles_x + (cubes[0].state * minus)]);
     }
@@ -152,8 +158,6 @@ function tile_to_triangle(tiles_x) {
         role();
     }
     eatsPosition = false;
-    
-            
 }
 function find_triangle_by_cordinates(mouse_x, mouse_y) {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
@@ -197,6 +201,7 @@ function mouseClick(e) {
     let mouse_x = event.clientX;
     let mouse_y = event.clientY;
 
+    let isIn = check_tiles_in(turn);
 
     cordinates = find_tile_by_cordinates(mouse_x, mouse_y);
     tiles_x = find_triangle_by_cordinates(mouse_x, mouse_y);
@@ -212,7 +217,7 @@ function mouseClick(e) {
         draw_move_options(cordinates[0], cordinates[1], cordinates[2]); // cordinates => [tiles_X, tiles_Y, isEaten]
     }
     else if(currTile.sign == true) { // sign == is marked and was clicked
-        if(tiles_x != false)
+        if(tiles_x !== false)
             tile_to_triangle(tiles_x);
     }
 
