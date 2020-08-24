@@ -1,8 +1,11 @@
-function validMove(number, moves, move_number) {
+function validMove(number, move_number) {
     if (number > 23 || number < -1) {
         return false;
     }
     if (move_number==2 && (cubes[0].fill_color == "grey" || cubes[1].fill_color == "grey" )) {
+        return false;
+    }
+    if (number < 0 && currTile.color == "black") {
         return false;
     }
     if(board[number].tiles.length <= 1)
@@ -30,7 +33,7 @@ function find_sign_tile() {
                 return [tiles_x, tiles_y];   
         }
     }
-    if (eaten_tiles[turn][0].sign == true)
+    if (eaten_tiles[turn].length && eaten_tiles[turn][0].sign == true)
     {
         if(turn == "white")
             return [true];

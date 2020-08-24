@@ -48,9 +48,9 @@ function init() {
     cubes[1] = new Cube(Math.floor(Math.random() * 6) + 1, 50);
     
     eaten_tiles["white"] = []; // sets 2 lists for the tiles that will get out
-    eaten_tiles["white"].push(new Tile("white", 0));
     eaten_tiles["black"] = [];
-    eaten_tiles["black"].push(new Tile("black", 0));
+    // eaten_tiles["white"].push(new Tile("white", 0));
+    // eaten_tiles["black"].push(new Tile("black", 0));
     init_Triangels();
     print_board(board);
 }
