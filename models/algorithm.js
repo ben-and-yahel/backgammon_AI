@@ -108,13 +108,7 @@ class Bot{
                 cubes[board[tiles_x].cube_number].dark_mode();
             }*/
         
-  
-            
-                    
-        
-
-
-
+        return board;
     }
     validMove(board, number, move_number) {
         if (number > 23 || number < 0) {

@@ -150,6 +150,11 @@ function tile_to_triangle(tiles_x) {
     }
     if (cubes[0].fill_color == "grey" && cubes[1].fill_color == "grey") {
         role();
+        if(turn == "black")
+        {
+            board = Bot.turn(board);   
+            role(); 
+        }
     }
     eatsPosition = false;
     
