@@ -2,7 +2,7 @@ function validMove(number, move_number) {
     if (number > 23 || number < -1) {
         return false;
     }
-    if (move_number==2 && (cubes[0].fill_color == "grey" || cubes[1].fill_color == "grey" )) {
+    if (move_number==2 && (cubes[0].fill_color == "grey" || cubes[1].fill_color == "grey")) {
         return false;
     }
     if (number < 0 && currTile.color == "black") {
@@ -20,7 +20,6 @@ function validMove(number, move_number) {
     {
         return false;
     }
-
     return true;
 }
 //returns a the loacation of the sign'ed tile for moving it.
@@ -42,8 +41,23 @@ function find_sign_tile() {
     }
     return false;
 }
+function check_tiles_in(color) {
+    let tiles_start = color == "white" ? 6 : 0; 
+    for (let tiles_x = tiles_start; tiles_x < board.length; tiles_x++) {
+        if (board[tiles_x].tiles == [] || (color == "black" && tiles_x>11 && tiles_x<18)) {
+            continue;
+        }
+        for (let tiles_y = 0; tiles_y < board[tiles_x].tiles.length; tiles_y++) {
+            if (board[tiles_x].tiles[tiles_y].color == color) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 function clean()
 {
+    borderDraw = false;
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         board[tiles_x].sign = false; 
         board[tiles_x].glow = false; 
@@ -51,10 +65,12 @@ function clean()
         if(board[tiles_x].tiles == [])
             continue;
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
-                if (board[tiles_x]) {
-                    board[tiles_x].tiles[tiles_y].sign = false;
-                    board[tiles_x].tiles[tiles_y].glow = false;
-                }
+                if (board[tiles_x].tiles.length < 0) 
+                    continue;
+                    //TODO: there is a bug here!
+                board[tiles_x].tiles[tiles_y].sign = false;
+                board[tiles_x].tiles[tiles_y].glow = false;
+                
         }
     }
     if(eaten_tiles[turn].length) {
@@ -67,7 +83,6 @@ function clean()
         currTile.glow = false;
     }
 }
-
 function role() {
     clean();
     cubes[0].shuffle();

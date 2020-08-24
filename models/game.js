@@ -2,21 +2,22 @@
 the function is called once the player clicks on tile and wants to view his move options
 */
 double_cubes = -99;
-function set_moves_by_cubes(tiles_x, minus) {
+all_tiles_in = false;
+function set_moves_by_cubes(tiles_x, minus, isIn) {
     moves = [];
+    //TODO: duoble two moves bug
     if (cubes[0].state == cubes[1].state) { // double situation
         moves.push([tiles_x + (cubes[0].state * minus)]);
-
         if (cubes[0].fill_color != "grey" &&  cubes[1].fill_color != "grey") 
             moves.push([tiles_x + ((cubes[0].state + cubes[1].state)* minus)]);  
-        
         return moves;
     }
+
     if (cubes[0].fill_color != "grey") {
         moves.push([tiles_x + (cubes[0].state * minus)]);
     }
     if (cubes[1].fill_color != "grey") {
-        moves.push([tiles_x + (cubes[1].state * minus)]);
+         moves.push([tiles_x + (cubes[1].state * minus)]);
     }
     if (cubes[0].fill_color != "grey" && cubes[1].fill_color != "grey"){
         moves.push([tiles_x + ((cubes[0].state + cubes[1].state)* minus)]);
@@ -24,22 +25,26 @@ function set_moves_by_cubes(tiles_x, minus) {
     return moves;
 }
 //TODO: needes different name
-function move(tiles_x, isEaten) {
+function move(tiles_x, isEaten, isIn) {
     minus = 1;  //In some scenarios we need to reverse the calaculation of the move
     if (!isEaten && (currTile.color == "black" && tiles_x <12 || currTile.color == "white" && tiles_x >=12)) 
         minus = -1;
     
     succseed = 0;
-    moves = set_moves_by_cubes(tiles_x, minus);
+    moves = set_moves_by_cubes(tiles_x, minus, isIn);
     for (let i = 0; i < moves.length; i++) {
          //In some scenario we need to modulo the cubes and reverse them
         if (moves[i] > 11 && currTile.color == "white" && minus == 1)
             moves[i] = 23 - (moves[i] % 12); 
         if (moves[i] > 23 && currTile.color == "black" && minus == 1)
             moves[i] = 11 - (moves[i] % 12);
-        if (moves[i] < 12 && currTile.color == "white" && minus == -1)
+        if (moves[i] < 12 && currTile.color == "white" && minus == -1 && !isIn)
             continue;
         
+        if (isIn && ((turn=="black" && moves[i] < 0) || (turn == "white" && moves[i] < 11))){
+            borderDraw = true;
+            continue;
+        } 
 
         isValid = validMove(moves[i], i);
 
@@ -59,7 +64,7 @@ function move(tiles_x, isEaten) {
     }
 }
 
-function draw_move_options(tiles_x, tiles_y, isEaten){
+function draw_move_options(tiles_x, tiles_y, isEaten, isIn){
     if (isEaten)
     {
         if (eaten_tiles[turn][0].color != turn) {
@@ -75,7 +80,7 @@ function draw_move_options(tiles_x, tiles_y, isEaten){
 
     clean();
         
-    move(tiles_x, isEaten); // needes to get tiles_x for the calc
+    move(tiles_x, isEaten, isIn); // needes to get tiles_x for the calc
     currTile.sign = true;
     currTile.draw();
     eatsPosition = true;
@@ -157,8 +162,6 @@ function tile_to_triangle(tiles_x) {
         }
     }
     eatsPosition = false;
-    
-            
 }
 function find_triangle_by_cordinates(mouse_x, mouse_y) {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
@@ -202,6 +205,7 @@ function mouseClick(e) {
     let mouse_x = event.clientX;
     let mouse_y = event.clientY;
 
+    let isIn = check_tiles_in(turn);
 
     cordinates = find_tile_by_cordinates(mouse_x, mouse_y);
     tiles_x = find_triangle_by_cordinates(mouse_x, mouse_y);
@@ -214,10 +218,10 @@ function mouseClick(e) {
         alert("you have eaten Tile!");
     }
     else if(cordinates  && (tiles_x == false || board[tiles_x].cube_number < 0)){
-        draw_move_options(cordinates[0], cordinates[1], cordinates[2]); // cordinates => [tiles_X, tiles_Y, isEaten]
+        draw_move_options(cordinates[0], cordinates[1], cordinates[2], isIn); // cordinates => [tiles_X, tiles_Y, isEaten]
     }
     else if(currTile.sign == true) { // sign == is marked and was clicked
-        if(tiles_x != false)
+        if(tiles_x !== false)
             tile_to_triangle(tiles_x);
     }
 
