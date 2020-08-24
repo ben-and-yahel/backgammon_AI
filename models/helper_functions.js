@@ -1,12 +1,12 @@
-function validMove(number, moves, move_number) {
-    if (number > 23 || number < 0) {
+function validMove(number, move_number) {
+    if (number > 23 || number < -1) {
         return false;
     }
     if (move_number==2 && (cubes[0].fill_color == "grey" || cubes[1].fill_color == "grey" )) {
         return false;
     }
-    else if (cubes[board[moves[move_number]].cube_number].fill_color == "grey") {
-       return false;
+    if (number < 0 && currTile.color == "black") {
+        return false;
     }
     if(board[number].tiles.length <= 1)
     {
@@ -33,20 +33,33 @@ function find_sign_tile() {
                 return [tiles_x, tiles_y];   
         }
     }
+    if (eaten_tiles[turn].length && eaten_tiles[turn][0].sign == true)
+    {
+        if(turn == "white")
+            return [true];
+        else
+            return [true];
+    }
+    return false;
 }
 function clean()
 {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         board[tiles_x].sign = false; 
         board[tiles_x].glow = false; 
-        board[tiles_x].cube_number = 0;
+        board[tiles_x].cube_number = -99;
         if(board[tiles_x].tiles == [])
             continue;
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
-                board[tiles_x].tiles[tiles_y].sign = false;
-                board[tiles_x].tiles[tiles_y].glow = false;
-                
+                if (board[tiles_x]) {
+                    board[tiles_x].tiles[tiles_y].sign = false;
+                    board[tiles_x].tiles[tiles_y].glow = false;
+                }
         }
+    }
+    if(eaten_tiles[turn].length) {
+        eaten_tiles[turn][0].sign = false;
+        eaten_tiles[turn][0].glow = false;
     }
     if(currTile)
     {
@@ -56,6 +69,7 @@ function clean()
 }
 
 function role() {
+    clean();
     cubes[0].shuffle();
     cubes[1].shuffle();
     cubes[0].draw();
