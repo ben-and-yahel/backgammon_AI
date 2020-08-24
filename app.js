@@ -47,6 +47,9 @@ function init() {
     cubes[0] = new Cube(Math.floor(Math.random() * 6) + 1, 0);
     cubes[1] = new Cube(Math.floor(Math.random() * 6) + 1, 50);
     
+    cubes[0].shuffle();
+    cubes[1].shuffle();
+
     eaten_tiles["white"] = []; // sets 2 lists for the tiles that will get out
     eaten_tiles["black"] = [];
     // eaten_tiles["white"].push(new Tile("white", 0));

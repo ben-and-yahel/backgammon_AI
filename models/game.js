@@ -1,8 +1,17 @@
 /*
 the function is called once the player clicks on tile and wants to view his move options
 */
+double_cubes = -99;
 function set_moves_by_cubes(tiles_x, minus) {
     moves = [];
+    if (cubes[0].state == cubes[1].state) { // double situation
+        moves.push([tiles_x + (cubes[0].state * minus)]);
+
+        if (cubes[0].fill_color != "grey" &&  cubes[1].fill_color != "grey") 
+            moves.push([tiles_x + ((cubes[0].state + cubes[1].state)* minus)]);  
+        
+        return moves;
+    }
     if (cubes[0].fill_color != "grey") {
         moves.push([tiles_x + (cubes[0].state * minus)]);
     }
@@ -10,7 +19,7 @@ function set_moves_by_cubes(tiles_x, minus) {
         moves.push([tiles_x + (cubes[1].state * minus)]);
     }
     if (cubes[0].fill_color != "grey" && cubes[1].fill_color != "grey"){
-        moves.push([tiles_x + ((cubes[0].state + cubes[1].state)* minus)])
+        moves.push([tiles_x + ((cubes[0].state + cubes[1].state)* minus)]);
     }
     return moves;
 }
@@ -71,20 +80,16 @@ function draw_move_options(tiles_x, tiles_y, isEaten){
     currTile.draw();
     eatsPosition = true;
 }
-
-function eat(tiles_x) {
-    // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
-    eaten_tiles[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
-    board[tiles_x].tiles = [];
-    board[tiles_x].length = 0;
-}
 function tile_to_triangle(tiles_x) {
     let tiles_location = find_sign_tile();
     x_tile = tiles_location[0];
     y_tile = tiles_location[1];
     if(board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color)
     {
-        eat(tiles_x);
+        // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
+        eaten_tiles[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
+        board[tiles_x].tiles = [];
+        board[tiles_x].length = 0;
     }
     if(x_tile != true)
         board[tiles_x].tiles.push(board[x_tile].tiles[y_tile]); //ads the new tile to the triangle
@@ -94,10 +99,42 @@ function tile_to_triangle(tiles_x) {
     board[tiles_x].length += 1;
 
 
-    if (board[tiles_x].cube_number == 2 || board[tiles_x].cube_number==100) {
+    if (cubes[0].state == cubes[1].state) {
+        if (double_cubes == -99) 
+            double_cubes = 2;
+
+        if (board[tiles_x].cube_number == 0 || board[tiles_x].cube_number == 100) {
+            if (double_cubes > 0) {
+                double_cubes -= 1;
+            }
+            else if (cubes[0].fill_color == "grey") {
+                cubes[1].dark_mode();
+                double_cubes = -99;
+            }
+            else{
+                cubes[0].dark_mode();
+            }
+        }
+        else if(board[tiles_x].cube_number == 1){
+            if (double_cubes == 2) {
+                double_cubes = 0;
+            }
+            else if (double_cubes == 1) {
+                double_cubes = 0;
+                cubes[0].dark_mode();
+            }
+            else if (double_cubes == 0) {
+                cubes[0].dark_mode();
+                cubes[1].dark_mode();
+                double_cubes = -99;
+            }
+        }
+    }
+    else if (board[tiles_x].cube_number == 2 || board[tiles_x].cube_number==100) {
         cubes[0].dark_mode();
         cubes[1].dark_mode();
     }
+    
     else{
         cubes[board[tiles_x].cube_number].dark_mode();
     }
@@ -166,16 +203,16 @@ function mouseClick(e) {
     if (find_sign_tile()[0] == cordinates[0]) {
         clean();
     }
-    else if(eaten_tiles[turn].length && cordinates[2] != true && tiles_x==false ) // in case we have eaten
+    //TODO: check possible bug
+    else if(cordinates && eaten_tiles[turn].length && cordinates[2] != true && tiles_x==false ) // in case we have eaten
     {
         alert("you have eaten Tile!");
     }
     else if(cordinates  && (tiles_x == false || board[tiles_x].cube_number < 0)){
         draw_move_options(cordinates[0], cordinates[1], cordinates[2]); // cordinates => [tiles_X, tiles_Y, isEaten]
     }
-
     else if(currTile.sign == true) { // sign == is marked and was clicked
-        if(tiles_x != undefined)
+        if(tiles_x != false)
             tile_to_triangle(tiles_x);
     }
 

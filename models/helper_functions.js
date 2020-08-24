@@ -51,9 +51,10 @@ function clean()
         if(board[tiles_x].tiles == [])
             continue;
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
-                board[tiles_x].tiles[tiles_y].sign = false;
-                board[tiles_x].tiles[tiles_y].glow = false;
-                
+                if (board[tiles_x]) {
+                    board[tiles_x].tiles[tiles_y].sign = false;
+                    board[tiles_x].tiles[tiles_y].glow = false;
+                }
         }
     }
     if(eaten_tiles[turn].length) {

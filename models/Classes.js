@@ -204,7 +204,8 @@ class Cube{
         ctx.closePath();
     }
     shuffle(){
-        this.state =Math.floor(Math.random() * 6) + 1;
+        //this.state =Math.floor(Math.random() * 6) + 1;
+        this.state = 2;
         this.fill_color = "white";
     }
     dark_mode(){
