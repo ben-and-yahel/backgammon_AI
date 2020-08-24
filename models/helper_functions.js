@@ -57,6 +57,7 @@ function check_tiles_in(color) {
 }
 function clean()
 {
+    borderDraw = false;
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         board[tiles_x].sign = false; 
         board[tiles_x].glow = false; 
