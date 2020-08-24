@@ -38,10 +38,10 @@ function move(tiles_x, isEaten, isIn) {
             moves[i] = 23 - (moves[i] % 12); 
         if (moves[i] > 23 && currTile.color == "black" && minus == 1)
             moves[i] = 11 - (moves[i] % 12);
-        if (moves[i] < 12 && currTile.color == "white" && minus == -1 && !true)
+        if (moves[i] < 12 && currTile.color == "white" && minus == -1 && !isIn)
             continue;
         
-        if (true && ((turn=="black" && moves[i] < 0) || (turn == "white" && moves[i] < 11))){
+        if (isIn && ((turn=="black" && moves[i] < 0) || (turn == "white" && moves[i] < 11))){
             borderDraw = true;
             continue;
         } 
