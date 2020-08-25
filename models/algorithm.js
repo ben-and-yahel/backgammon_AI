@@ -6,43 +6,43 @@
 */
 class Bot{
     turn(board){
-        let cube1 = cube[0].state, cube2 = cube[1].state;
-        evaluationArray = []
+        let cube1 = cubes[0].state, cube2 = cubes[1].state;
+        let value = [0,null];
         for(let x=0;x<board.length;x++)
         {
-            if(board[x].length == 0)
+            if(board[x].length <= 0)
                 continue;
             if(board[x].tiles[0].color == "white")
                 continue;
-            let tempBoard = [...board];//copying array
-            tempBoard = this.move(tempBoard, y, cube1, 0)
+            let tempBoard = copyArray(board);//copying array
+            tempBoard = this.move(tempBoard, x, cube1, 0)
             if(tempBoard == null)
                 continue;
-            let value = [0];
+            
             for(let y=0;y<tempBoard.length;y++)
             {
-                if(tempBoard[x].length == 0)
+                if(tempBoard[y].length <= 0)
                     continue;
-                if(tempBoard[x].tiles[0].color == "white")
+                if(tempBoard[y].tiles[0].color == "white")
                     continue;
-                let newBoard = [...tempBoard];//copying array
+                let newBoard = copyArray(tempBoard);//copying array
                 newBoard = this.move(newBoard, y, cube2, 1)
                 if(newBoard == null)
                     continue;
                 let newValue = this.evaluate();
                 if(value[0] < newValue)
-                    value = [newValue,[...newBoard]];
+                    value = [newValue,copyArray(newBoard)];
             }
         }
 
-
+        return value[1] == null ? board : value[1];
     }
     /*
     evaluate function - evaluating how good is this move going to be
     */
     evaluate(board)
     {
-        return (int)(random()*10);
+        return Math.floor(Math.random()*10) + 1;
     }
     move(board, tile, steps, state)
     {
@@ -50,6 +50,8 @@ class Bot{
         if (tile <12) 
             minus = -1;
         moves = set_moves_by_cubes(tile,minus);
+        if (moves[state] > 23 && minus == 1)
+            moves[state] = 11 - (moves[state] % 12);
         let tiles_x = moves[state];
         if(!this.validMove(board, tiles_x, state))
             return null;
@@ -63,7 +65,7 @@ class Bot{
                 board[tiles_x].tiles = [];
                 board[tiles_x].length = 0;
             }
-            board[tiles_x].tiles.push(board[tile].tiles.splice(0,1)); //ads the new tile to the triangle
+            board[tiles_x].tiles.push(board[tile].tiles.splice(0,1)[0]); //ads the new tile to the triangle
             board[tile].length -= 1;
             board[tiles_x].length += 1;
         
@@ -127,4 +129,5 @@ class Bot{
     
         return true;
     }
+    
 }

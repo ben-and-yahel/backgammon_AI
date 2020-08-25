@@ -157,7 +157,8 @@ function tile_to_triangle(tiles_x) {
         role();
         if(turn == "black")
         {
-            board = Bot.turn(board);   
+            let bot = new Bot();
+            board = bot.turn(board);   
             role(); 
         }
     }

@@ -103,3 +103,16 @@ function checkWin(colorToCheck)
     }
     return true;
 }
+function arrayEquals(a, b) {
+    return Array.isArray(a) &&
+      Array.isArray(b) &&
+      a.length === b.length &&
+      a.every((val, index) => val === b[index]);
+}
+function copyArray(arr)
+{
+    newArr = [];
+    for(let i = 0; i < arr.length;i++)
+        newArr.push(arr[i]);
+    return newArr;
+}
