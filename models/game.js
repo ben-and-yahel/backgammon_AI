@@ -157,12 +157,10 @@ function tile_to_triangle(tiles_x) {
         role();
         if(turn == "black")
         {
-            if(cubes[0].state == cubes[1].state)
             let bot = new Bot();
             let result = bot.turn(board,eaten_tiles);   
             board = result[1];
             eaten_tiles = result[2];
-            alert();
             role(); 
         }
     }
