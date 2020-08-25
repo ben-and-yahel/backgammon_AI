@@ -111,8 +111,14 @@ function arrayEquals(a, b) {
 }
 function copyArray(arr)
 {
-    newArr = [];
-    for(let i = 0; i < arr.length;i++)
-        newArr.push(arr[i]);
-    return newArr;
+    newArray = JSON.parse(JSON.stringify(arr));
+    for (let i = 0; i < newArray.length; i++) {
+        newArray[i].__proto__ = Triangle.prototype;
+        for(let j = 0; j < newArray[i].length; j++)
+        {
+            newArray[i].tiles[j].__proto__ = Tile.prototype;
+        }
+        
+    }
+    return newArray;
 }
