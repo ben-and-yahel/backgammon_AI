@@ -40,8 +40,7 @@ class Bot{
                     value = [newValue,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)];
             }
         }
-
-        return value[1] == null ? board : value;
+        return value[1] == null ? [0,board,eatArray] : value;
     }
     /*
     evaluate function - evaluating how good is this move going to be

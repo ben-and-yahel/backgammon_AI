@@ -121,6 +121,8 @@ function copyBoard(arr)
         }
         
     }
+    if(newArray.__proto__ == Triangle.prototype)
+    console.log(arr);
     return newArray;
 }
 //use to copy the eaten tiles array
