@@ -5,7 +5,8 @@
     go through 
 */
 class Bot{
-    turn(board){
+    turn(board, eatArray){
+        let eatArrayProp = eatArray.__proto__;
         let cube1 = cubes[0].state, cube2 = cubes[1].state;
         let value = [0,null];
         for(let x=0;x<board.length;x++)
@@ -14,28 +15,33 @@ class Bot{
                 continue;
             if(board[x].tiles[0].color == "white")
                 continue;
-            let tempBoard = copyArray(board);//copying array
-            tempBoard = this.move(tempBoard, x, cube1, 0)
-            if(tempBoard == null)
+            let tempBoard = copyBoard(board);//copying array
+            let tempEatArray = copyArray(eatArray,eatArrayProp);
+            let result = this.move(tempBoard, tempEatArray, x, cube1, 0)
+            if(result == null)
                 continue;
-            
+            tempBoard  = result[0];
+            tempEatArray = result[1];
             for(let y=0;y<tempBoard.length;y++)
             {
                 if(tempBoard[y].length <= 0)
                     continue;
                 if(tempBoard[y].tiles[0].color == "white")
                     continue;
-                let newBoard = copyArray(tempBoard);//copying array
-                newBoard = this.move(newBoard, y, cube2, 1)
-                if(newBoard == null)
+                let newBoard = copyBoard(tempBoard);//copying array
+                let newEatArray = copyArray(tempEatArray,eatArrayProp);
+                result = this.move(newBoard, newEatArray, y, cube2, 1)
+                if(result == null)
                     continue;
+                newBoard  = result[0];
+                newEatArray = result[1];
                 let newValue = this.evaluate();
                 if(value[0] < newValue)
-                    value = [newValue,copyArray(newBoard)];
+                    value = [newValue,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)];
             }
         }
 
-        return value[1] == null ? board : value[1];
+        return value[1] == null ? board : value;
     }
     /*
     evaluate function - evaluating how good is this move going to be
@@ -44,7 +50,7 @@ class Bot{
     {
         return Math.floor(Math.random()*10) + 1;
     }
-    move(board, tile, steps, state)
+    move(board, eat, tile, steps, state)
     {
         minus = 1;  //In some scenarios we need to reverse the calaculation of the move
         if (tile <12) 
@@ -61,7 +67,7 @@ class Bot{
             if(board[tiles_x].length == 1 && "white" == board[tiles_x].tiles[0].color)
             {
                 // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
-                eaten_tiles[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
+                eat[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
                 board[tiles_x].tiles = [];
                 board[tiles_x].length = 0;
             }
@@ -110,7 +116,7 @@ class Bot{
                 cubes[board[tiles_x].cube_number].dark_mode();
             }*/
         
-        return board;
+        return [board,eat];
     }
     validMove(board, number, move_number) {
         if (number > 23 || number < 0) {

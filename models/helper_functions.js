@@ -109,7 +109,8 @@ function arrayEquals(a, b) {
       a.length === b.length &&
       a.every((val, index) => val === b[index]);
 }
-function copyArray(arr)
+//use to copy the board
+function copyBoard(arr)
 {
     newArray = JSON.parse(JSON.stringify(arr));
     for (let i = 0; i < newArray.length; i++) {
@@ -120,5 +121,18 @@ function copyArray(arr)
         }
         
     }
+    return newArray;
+}
+//use to copy the eaten tiles array
+function copyArray(arr,ArrayProp)
+{
+    newArray = JSON.parse(JSON.stringify(arr));
+    newArray.__proto__ = ArrayProp;
+    for(let col in newArray){
+        for(let j = 0; j < newArray[col].length; j++)
+        {
+            newArray[col][j].__proto__ = Tile.prototype;
+        }
+    }  
     return newArray;
 }
