@@ -51,8 +51,8 @@ function move(tiles_x, isEaten, isIn) {
 
         if(isValid == false)
             continue;
-        if(i==2 && succseed == 0) // In case of the first and second move dosen't work
-            break
+        if(moves.length > 1 && i == moves.length-1 && succseed == 0) // In case of the first and second move dosen't work
+            break;
         board[moves[i]].sign = true;
         if (moves.length == 1) {
             board[moves[i]].cube_number = 100; // stands for turn pass after the move
@@ -87,6 +87,7 @@ function draw_move_options(tiles_x, tiles_y, isEaten, isIn){
     eatsPosition = true;
 }
 function tile_to_triangle(tiles_x) {
+    
     let tiles_location = find_sign_tile();
     x_tile = tiles_location[0];
     y_tile = tiles_location[1];
@@ -94,7 +95,7 @@ function tile_to_triangle(tiles_x) {
     {
         // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
         eaten_tiles[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
-        board[tiles_x].tiles = [];
+        board[tiles_x].tiles.splice(0,1);
         board[tiles_x].length = 0;
     }
     if(x_tile != true)
@@ -140,9 +141,19 @@ function tile_to_triangle(tiles_x) {
         cubes[0].dark_mode();
         cubes[1].dark_mode();
     }
-    
     else{
         cubes[board[tiles_x].cube_number].dark_mode();
+    }
+    // we need to check if there is eaten tile in the move
+    for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
+        if (board[tiles_x].length == 0) {
+            continue;
+        }
+        if ((board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color)  && (board[tiles_x].cube_number == 1 || board[tiles_x].cube_number == 0)) {
+            eaten_tiles[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
+            board[tiles_x].tiles.splice(0,1);
+            board[tiles_x].length = 0;
+        }
     }
 
 
@@ -152,14 +163,15 @@ function tile_to_triangle(tiles_x) {
         board[x_tile].length -= 1;
     }
     else{
-        eaten_tiles[turn].splice(0,1)
+        eaten_tiles[turn].splice(0,1);
     }
+
     if (cubes[0].fill_color == "grey" && cubes[1].fill_color == "grey") {
         role();
         if(turn == "black")
         {
             let bot = new Bot();
-            let result = bot.turn(board,eaten_tiles);   
+            let result = bot.turn(board, eaten_tiles);   
             board = result[1];
             eaten_tiles = result[2];
             role(); 

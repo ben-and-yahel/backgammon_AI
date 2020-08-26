@@ -69,6 +69,9 @@ function clean()
                 if (board[tiles_x].tiles.length < 0) 
                     continue;
                     //TODO: there is a bug here!
+                if (board[tiles_x].tiles[tiles_y] == undefined) {
+                    debugger;
+                }
                 board[tiles_x].tiles[tiles_y].sign = false;
                 board[tiles_x].tiles[tiles_y].glow = false;
                 
