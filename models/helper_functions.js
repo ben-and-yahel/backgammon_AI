@@ -103,3 +103,38 @@ function checkWin(colorToCheck)
     }
     return true;
 }
+function arrayEquals(a, b) {
+    return Array.isArray(a) &&
+      Array.isArray(b) &&
+      a.length === b.length &&
+      a.every((val, index) => val === b[index]);
+}
+//use to copy the board
+function copyBoard(arr)
+{
+    newArray = JSON.parse(JSON.stringify(arr));
+    for (let i = 0; i < newArray.length; i++) {
+        newArray[i].__proto__ = Triangle.prototype;
+        for(let j = 0; j < newArray[i].length; j++)
+        {
+            newArray[i].tiles[j].__proto__ = Tile.prototype;
+        }
+        
+    }
+    if(newArray.__proto__ == Triangle.prototype)
+    console.log(arr);
+    return newArray;
+}
+//use to copy the eaten tiles array
+function copyArray(arr,ArrayProp)
+{
+    newArray = JSON.parse(JSON.stringify(arr));
+    newArray.__proto__ = ArrayProp;
+    for(let col in newArray){
+        for(let j = 0; j < newArray[col].length; j++)
+        {
+            newArray[col][j].__proto__ = Tile.prototype;
+        }
+    }  
+    return newArray;
+}
