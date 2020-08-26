@@ -3,7 +3,7 @@ the function is called once the player clicks on tile and wants to view his move
 */
 double_cubes = -99;
 all_tiles_in = false;
-function set_moves_by_cubes(tiles_x, minus, isIn) {
+function set_moves_by_cubes(tiles_x, minus) {
     moves = [];
     //TODO: duoble two moves bug
     if (cubes[0].state == cubes[1].state) { // double situation
@@ -31,7 +31,7 @@ function move(tiles_x, isEaten, isIn) {
         minus = -1;
     
     succseed = 0;
-    moves = set_moves_by_cubes(tiles_x, minus, isIn);
+    moves = set_moves_by_cubes(tiles_x, minus);
     for (let i = 0; i < moves.length; i++) {
          //In some scenario we need to modulo the cubes and reverse them
         if (moves[i] > 11 && currTile.color == "white" && minus == 1)

@@ -42,9 +42,9 @@ function find_sign_tile() {
     return false;
 }
 function check_tiles_in(color) {
-    let tiles_start = color == "white" ? 6 : 0; 
+    let tiles_start = color == "black" ? 6 : 0; 
     for (let tiles_x = tiles_start; tiles_x < board.length; tiles_x++) {
-        if (board[tiles_x].tiles == [] || (color == "black" && tiles_x>11 && tiles_x<18)) {
+        if (board[tiles_x].tiles == [] || (color == "white" && tiles_x>11 && tiles_x<18)) {
             continue;
         }
         for (let tiles_y = 0; tiles_y < board[tiles_x].tiles.length; tiles_y++) {
