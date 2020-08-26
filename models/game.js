@@ -97,10 +97,10 @@ function tile_to_triangle(tiles_x) {
         board[tiles_x].tiles = [];
         board[tiles_x].length = 0;
     }
-    if(x_tile != true)
-        board[tiles_x].tiles.push(board[x_tile].tiles[y_tile]); //ads the new tile to the triangle
-    else
+    if(x_tile === true)
         board[tiles_x].tiles.push(eaten_tiles[turn][0]);
+    else
+        board[tiles_x].tiles.push(board[x_tile].tiles[y_tile]); //ads the new tile to the triangle
 
     board[tiles_x].length += 1;
 

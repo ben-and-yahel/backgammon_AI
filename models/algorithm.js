@@ -55,24 +55,58 @@ class Bot{
         if (tile <12) 
             minus = -1;
         moves = set_moves_by_cubes(tile,minus);
-        if (moves[state] > 23 && minus == 1)
-            moves[state] = 11 - (moves[state] % 12);
-        let tiles_x = moves[state];
+        if (moves[state][0] > 23 && minus == 1)
+            moves[state] = [11 - (moves[state][0] % 12)];
+        let tiles_x = moves[state][0];
         if(!this.validMove(board, tiles_x, state))
             return null;
         
 
 
-            if(board[tiles_x].length == 1 && "white" == board[tiles_x].tiles[0].color)
-            {
-                // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
-                eat[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
-                board[tiles_x].tiles = [];
-                board[tiles_x].length = 0;
+            
+            //finding the fartest tile in the house
+            let fartest = 0;
+            if(this.check_tiles_in(board) == true){
+                for(let i = 0; i < 6; i++)
+                {
+                    if(board[i].length > 0 && board[i].tiles[0].color === "black")
+                        fartest = i;
+                }
+                if(tiles_x < 0){
+                    if(tile < fartest)
+                    {
+                        return null
+                    }
+                    board[tile].tiles.splice(0,1);
+                    board[tile].length -= 1;
+                }
+                else
+                {
+                    if(board[tiles_x].length == 1 && "white" == board[tiles_x].tiles[0].color)
+                    {
+                        // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
+                        eat[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
+                        board[tiles_x].tiles = [];
+                        board[tiles_x].length = 0;
+                    }
+                    board[tiles_x].tiles.push(board[tile].tiles.splice(0,1)[0]); //ads the new tile to the triangle
+                    board[tile].length -= 1;
+                    board[tiles_x].length += 1;
+                }
             }
-            board[tiles_x].tiles.push(board[tile].tiles.splice(0,1)[0]); //ads the new tile to the triangle
-            board[tile].length -= 1;
-            board[tiles_x].length += 1;
+            else if(tiles_x >= 0)
+            {
+                if(board[tiles_x].length == 1 && "white" == board[tiles_x].tiles[0].color)
+                {
+                    // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
+                    eat[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
+                    board[tiles_x].tiles = [];
+                    board[tiles_x].length = 0;
+                }
+                board[tiles_x].tiles.push(board[tile].tiles.splice(0,1)[0]); //ads the new tile to the triangle
+                board[tile].length -= 1;
+                board[tiles_x].length += 1;
+            }
         
         
             /*if (cubes[0].state == cubes[1].state) {
@@ -118,10 +152,14 @@ class Bot{
         return [board,eat];
     }
     validMove(board, number, move_number) {
-        if (number > 23 || number < 0) {
-            return false;
+        if(!(number < 0 && this.check_tiles_in(board) == true)){
+            if (number > 23 || number < 0) {
+                return false;
+            }
+        }    
+        else{
+            return true;
         }
-        
         if(board[number].tiles.length <= 1)
         {
             return true;
@@ -134,5 +172,18 @@ class Bot{
     
         return true;
     }
-    
+    check_tiles_in(board) {
+        let tiles_start = 6; 
+        for (let tiles_x = tiles_start; tiles_x < board.length; tiles_x++) {
+            if (board[tiles_x].tiles == []) {
+                continue;
+            }
+            for (let tiles_y = 0; tiles_y < board[tiles_x].tiles.length; tiles_y++) {
+                if (board[tiles_x].tiles[tiles_y].color == "black") {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
