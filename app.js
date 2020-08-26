@@ -16,6 +16,7 @@ turn = "white";
 eaten_tiles = {};
 eatsPosition = false;
 borderDraw = false;
+borderGlow = false;
 // ----------------init functions--------------------
 function init() {
     //makes the board
@@ -92,9 +93,16 @@ function print_board(board)
     ctx.fillStyle = "#ff9900";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.fillStyle = borderDraw ? "blue" : "#cc6600";
+    if (borderGlow) {
+        ctx.shadowBlur = 50;
+        ctx.shadowColor = "gray";
+    }
     ctx.fillRect(0, 0, frame_size, ctx.canvas.height);
 
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = "black";
     ctx.fillStyle = "#cc6600";
+    
     ctx.fillRect(0, 0, ctx.canvas.width, frame_size);
     ctx.fillRect(0, ctx.canvas.height-frame_size, ctx.canvas.width, frame_size);
     ctx.fillRect(ctx.canvas.width-frame_size, 0, frame_size, ctx.canvas.height);
