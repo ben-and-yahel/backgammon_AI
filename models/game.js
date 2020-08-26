@@ -92,6 +92,7 @@ function tile_to_triangle(tiles_x) {
     let tiles_location = find_sign_tile();
     x_tile = tiles_location[0];
     y_tile = tiles_location[1];
+    // ------------ case: need to extract tiles out of the board-----------
     if (tiles_x == outNumber) {
         board[x_tile].tiles.splice(y_tile, 1); // delets the old tile
         board[x_tile].length -= 1;
@@ -109,6 +110,7 @@ function tile_to_triangle(tiles_x) {
         eatsPosition = false;
         return;
     }
+    // ------------ case: need to eat tile from the triangle -----------
     else if(board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color)
     {
         // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
@@ -116,14 +118,19 @@ function tile_to_triangle(tiles_x) {
         board[tiles_x].tiles.splice(0,1);
         board[tiles_x].length = 0;
     }
+    // ------------ case: when tile is eaten we need to copy it from diffrent array -----------  
     if(x_tile === true)
+    {
         board[tiles_x].tiles.push(eaten_tiles[turn][0]);
+    } 
+    // ------------ case: usual case adding the tile to the board -----------  
     else
         board[tiles_x].tiles.push(board[x_tile].tiles[y_tile]); //ads the new tile to the triangle
 
+
     board[tiles_x].length += 1;
 
-
+    // ------------ case: double situation where the cubes are the same-----------
     if (cubes[0].state == cubes[1].state) {
         if (double_cubes == -99) 
             double_cubes = 2;
@@ -155,35 +162,42 @@ function tile_to_triangle(tiles_x) {
             }
         }
     }
-    else if (board[tiles_x].cube_number == 2 || board[tiles_x].cube_number==100) {
+    // ------------ case: if player picking the last option of the cube is need spicial case-----------
+    else if (board[tiles_x].cube_number == 2 || board[tiles_x].cube_number==100) { //TODO: change magic numbers!!
         cubes[0].dark_mode();
         cubes[1].dark_mode();
     }
+    // ------------ case: usual case were the cube are getting dark mode -----------
     else{
         cubes[board[tiles_x].cube_number].dark_mode();
     }
-    // we need to check if there is eaten tile in the move
-    for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
-        if (board[tiles_x].length == 0) {
-            continue;
-        }
-        if ((board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color)  && (board[tiles_x].cube_number == 1 || board[tiles_x].cube_number == 0)) {
-            eaten_tiles[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
-            board[tiles_x].tiles.splice(0,1);
-            board[tiles_x].length = 0;
+    // ------------ case: we need to check if there is eaten tile in the move -----------
+    if (board[tiles_x].cube_number == 2 || (cubes[0].state == cubes[1].state && board[tiles_x].cube_number == 1)) {
+        for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
+            if (board[tiles_x].length == 0)
+                continue;
+            
+            if (board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color) {
+                eaten_tiles[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
+                board[tiles_x].tiles.splice(0,1);
+                board[tiles_x].length = 0;
+            }
         }
     }
 
 
     clean();
+    // ------------ case: usual case were we delete the old tile from the array-----------
     if(!(x_tile === true)){
         board[x_tile].tiles.splice(y_tile, 1); // delets the old tile
         board[x_tile].length -= 1;
     }
+    // ------------ case: when tile is eaten we neeed to delete it from defernt array-----------
     else{
         eaten_tiles[turn].splice(0,1);
     }
-
+    //TODO: make animation of turn been switched
+    // ------------ case: usual when 2 cubes are in dark mode we need to change the turn -----------
     if (cubes[0].fill_color == "grey" && cubes[1].fill_color == "grey") {
         role();
         if(turn == "black")
@@ -195,7 +209,7 @@ function tile_to_triangle(tiles_x) {
             role(); 
         }
     }
-    eatsPosition = false;
+    eatsPosition = false; //TODO: wtf is this?!
 }
 function find_triangle_by_cordinates(mouse_x, mouse_y) {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
