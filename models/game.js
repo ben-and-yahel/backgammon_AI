@@ -212,6 +212,8 @@ function mouseClick(e) {
     {
         alert("you have eaten Tile!");
     }
+
+    
     else if(cordinates  && (tiles_x == false || board[tiles_x].cube_number < 0)){
         draw_move_options(cordinates[0], cordinates[1], cordinates[2], isIn); // cordinates => [tiles_X, tiles_Y, isEaten]
     }
