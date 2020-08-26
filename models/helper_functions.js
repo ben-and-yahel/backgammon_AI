@@ -62,6 +62,7 @@ function clean()
         board[tiles_x].sign = false; 
         board[tiles_x].glow = false; 
         board[tiles_x].cube_number = -99;
+        board[tiles_x].length == -1 ? board[tiles_x].length = 0 : true;
         if(board[tiles_x].tiles == [])
             continue;
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {

@@ -41,7 +41,8 @@ function move(tiles_x, isEaten, isIn) {
         if (moves[i] < 12 && currTile.color == "white" && minus == -1 && !isIn)
             continue;
         
-        if (isIn && ((turn=="black" && moves[i] < 0) || (turn == "white" && moves[i] < 11))){
+        //TODO: check bugs
+        if (isIn && ((turn=="black" && moves[i] < 0) || (turn == "white" && moves[i] < 12))){
             borderDraw = true;
             continue;
         } 
