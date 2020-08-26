@@ -116,14 +116,8 @@ function tile_to_triangle(tiles_x) {
         board[tiles_x].tiles.splice(0,1);
         board[tiles_x].length = 0;
     }
-<<<<<<< HEAD
     if(x_tile === true)
-=======
-    
-    else if(x_tile != true)
-        board[tiles_x].tiles.push(board[x_tile].tiles[y_tile]); //ads the new tile to the triangle
-    else
->>>>>>> fff1819f016ba24fa60531ad96e813f3d5190757
+
         board[tiles_x].tiles.push(eaten_tiles[turn][0]);
     else
         board[tiles_x].tiles.push(board[x_tile].tiles[y_tile]); //ads the new tile to the triangle
