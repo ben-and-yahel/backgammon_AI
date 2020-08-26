@@ -148,3 +148,14 @@ function copyArray(arr,ArrayProp)
     }  
     return newArray;
 }
+function checkIfEmpty(board,color){
+
+    for(let i = 0; i < board.length; i++)
+    {
+        if(board[i].length > 0 && color == board[i].tiles[0].color )
+        {
+            return false;
+        }
+    }
+    return true;
+}

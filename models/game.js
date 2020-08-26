@@ -117,7 +117,6 @@ function tile_to_triangle(tiles_x) {
         board[tiles_x].length = 0;
     }
     if(x_tile === true)
-
         board[tiles_x].tiles.push(eaten_tiles[turn][0]);
     else
         board[tiles_x].tiles.push(board[x_tile].tiles[y_tile]); //ads the new tile to the triangle
@@ -177,7 +176,7 @@ function tile_to_triangle(tiles_x) {
 
 
     clean();
-    if(x_tile != true){
+    if(!(x_tile === true)){
         board[x_tile].tiles.splice(y_tile, 1); // delets the old tile
         board[x_tile].length -= 1;
     }

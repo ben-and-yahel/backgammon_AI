@@ -18,10 +18,14 @@ class Bot{
             let tempBoard = copyBoard(board);//copying array
             let tempEatArray = copyArray(eatArray,eatArrayProp);
             let result = this.move(tempBoard, tempEatArray, x, cube1, 0)
-            if(result == null)
+            if(result === null)
                 continue;
             tempBoard  = result[0];
             tempEatArray = result[1];
+            if(checkIfEmpty(tempBoard,"black"))
+            {
+                return [0,copyBoard(tempBoard),copyArray(tempEatArray)]
+            }
             for(let y=0;y<tempBoard.length;y++)
             {
                 if(tempBoard[y].length <= 0)
