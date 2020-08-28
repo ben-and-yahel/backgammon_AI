@@ -65,7 +65,7 @@ function init_Triangels() {
     let x = frame_size + X_seperate;
     let y = ctx.canvas.height-frame_size - 5; // 5 for seperation
     let width =  ctx.canvas.width;
-    width = width/ 15;
+    width = width/ 15.1;
     const height = 200;
     for (let i = 0; i < 12; i++) {
         board[i].x = x;
