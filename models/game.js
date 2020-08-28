@@ -3,11 +3,11 @@ the function is called once the player clicks on tile and wants to view his move
 */
 const none_cube_number = -99;
 const outNumber = -50;
+const special_double = 100;
 double_cubes = none_cube_number;
 
 function set_moves_by_cubes(tiles_x, minus) {
     moves = [];
-    //TODO: duoble two moves bug
     if (cubes[0].state == cubes[1].state) { // double situation
         moves.push([tiles_x + (cubes[0].state * minus)]);
         if (cubes[0].fill_color != "grey" &&  cubes[1].fill_color != "grey") 
@@ -26,8 +26,8 @@ function set_moves_by_cubes(tiles_x, minus) {
     }
     return moves;
 }
-//TODO: needes different name
-function move(tiles_x, isEaten, isIn) {
+function draw_move_options(tiles_x, isEaten, isIn) {
+
     minus = 1;  //In some scenarios we need to reverse the calaculation of the move
     if (!isEaten && (currTile.color == "black" && tiles_x <12 || currTile.color == "white" && tiles_x >=12)) 
         minus = -1;
@@ -43,7 +43,6 @@ function move(tiles_x, isEaten, isIn) {
         if (moves[i] < 12 && currTile.color == "white" && minus == -1 && !isIn)
             continue;
         
-        //TODO: check bugs
         if (isIn && ((turn=="black" && moves[i] < 0) || (turn == "white" && moves[i] < 12))){
             borderDraw = true;
             continue;
@@ -56,8 +55,8 @@ function move(tiles_x, isEaten, isIn) {
         if(moves.length > 1 && i == moves.length-1 && succseed == 0) // In case of the first and second move dosen't work
             break;
         board[moves[i]].sign = true;
-        if (moves.length == 1) {
-            board[moves[i]].cube_number = 100; // stands for turn pass after the move
+        if (moves.length == 1) { // spicial case were there is double and the second move is like the third
+            board[moves[i]].cube_number = special_double; // stands for turn pass after the move
         } else {
             board[moves[i]].cube_number = i;
         }
@@ -67,7 +66,7 @@ function move(tiles_x, isEaten, isIn) {
     }
 }
 
-function draw_move_options(tiles_x, tiles_y, isEaten, isIn){
+function check_move_options(tiles_x, tiles_y, isEaten, isIn){
     if (isEaten)
     {
         if (eaten_tiles[turn][0].color != turn) {
@@ -136,7 +135,7 @@ function tile_to_triangle(tiles_x) {
         if (double_cubes == none_cube_number) 
             double_cubes = 2;
 
-        if (board[tiles_x].cube_number == 0 || board[tiles_x].cube_number == 100) {
+        if (board[tiles_x].cube_number == 0 || board[tiles_x].cube_number == special_double) {
             if (double_cubes > 0) {
                 double_cubes -= 1;
             }
@@ -164,7 +163,7 @@ function tile_to_triangle(tiles_x) {
         }
     }
     // ------------ case: if player picking the last option of the cube is need spicial case-----------
-    else if (board[tiles_x].cube_number == 2 || board[tiles_x].cube_number==100) { //TODO: change magic numbers!!
+    else if (board[tiles_x].cube_number == 2 || board[tiles_x].cube_number==special_double) {
         cubes[0].dark_mode();
         cubes[1].dark_mode();
     }
@@ -204,20 +203,23 @@ function tile_to_triangle(tiles_x) {
         if(turn == "black")
         {
             let bot = new Bot();
+<<<<<<< HEAD
             console.log(cubes[0].state,cubes[1].state);
+=======
+>>>>>>> f028afe1f91849dc2be8b69730a1b530c6c3c3f8
             let result = bot.turn(board, eaten_tiles);   
             board = result[1];
             eaten_tiles = result[2];
             role(); 
         }
     }
-    eatsPosition = false; //TODO: wtf is this?!
+    //TODO: wtf is this?!
+    eatsPosition = false; 
 }
 function find_triangle_by_cordinates(mouse_x, mouse_y) {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         if(board[tiles_x].tiles == [])
             continue;
-        //TODO: doc this!!
         if(board[tiles_x].sign && board[tiles_x].isInside(mouse_x,mouse_y - 5 - board[tiles_x].frame_size - strap_height))
         {
             return tiles_x;
@@ -256,25 +258,24 @@ function mouseClick(e) {
     let mouse_x = event.clientX;
     let mouse_y = event.clientY;
 
-    let isIn = check_tiles_in(turn);
+    let isIn = check_tiles_in(turn); // check if all the tiles are in their bases
     let isBorderClicked = check_border_by_cordinates(mouse_x, mouse_y);
 
     cordinates = find_tile_by_cordinates(mouse_x, mouse_y);
     tiles_x = find_triangle_by_cordinates(mouse_x, mouse_y);
-    if(isBorderClicked)
-        tiles_x = outNumber;
     if (find_sign_tile()[0] == cordinates[0]) {
         clean();
     }
-    //TODO: check possible bug
     else if(cordinates && eaten_tiles[turn].length && cordinates[2] != true && tiles_x==false ) // in case we have eaten
     {
         alert("you have eaten Tile!");
     }
+    else if(isBorderClicked)
+        tiles_x = outNumber;    
 
     
     else if(cordinates  && (tiles_x == false || board[tiles_x].cube_number < 0)){
-        draw_move_options(cordinates[0], cordinates[1], cordinates[2], isIn); // cordinates => [tiles_X, tiles_Y, isEaten]
+        check_move_options(cordinates[0], cordinates[1], cordinates[2], isIn); // cordinates => [tiles_X, tiles_Y, isEaten]
     }
     else if(currTile.sign == true || tiles_x == outNumber) { // sign == is marked and was clicked
         if(tiles_x !== false)
@@ -300,7 +301,7 @@ function mouse_hover(e) {
     for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
         if(board[tiles_x].tiles == [])
             continue;
-        //TODO: DOC THIS
+        //change the glow affect by asking if the mouse is inside the tringle
         if(board[tiles_x].sign)
             board[tiles_x].glow = board[tiles_x].isInside(mouse_x,mouse_y - 5 - board[tiles_x].frame_size - strap_height) ? true : false; 
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
@@ -310,7 +311,6 @@ function mouse_hover(e) {
                 if (mouse_y >= board[tiles_x].tiles[tiles_y].y - radius && mouse_y <= board[tiles_x].tiles[tiles_y].y + radius) {
                     if (currTile.glow == true) {
                         currTile.glow = false;
-                        //currTile.draw();
                     }
                     if(!eatsPosition && turn == board[tiles_x].tiles[tiles_y].color)
                     {

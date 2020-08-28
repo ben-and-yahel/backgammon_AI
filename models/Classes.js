@@ -1,4 +1,3 @@
-//TODO: DOC!!!
 class Tile{
     constructor(color, x = 0, y = 0){
         this.color = color;

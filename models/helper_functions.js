@@ -74,7 +74,6 @@ function clean()
         for (let tiles_y = 0; tiles_y < board[tiles_x].length; tiles_y++) {
                 if (board[tiles_x].tiles.length < 0) 
                     continue;
-                    //TODO: there is a bug here!
                 if (board[tiles_x].tiles[tiles_y] == undefined) {
                     debugger;
                 }

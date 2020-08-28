@@ -1,9 +1,3 @@
-/*
-    the bot will be black
-    TODO: for tommorow you need to make the evaluate function but not efore ou make sure that the eats and basic rules are understood
-
-    go through 
-*/
 class Bot{
     turn(board, eatArray){
         if(eatArray["black"].length > 0)
