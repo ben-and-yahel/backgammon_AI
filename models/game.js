@@ -82,7 +82,7 @@ function check_move_options(tiles_x, tiles_y, isEaten, isIn){
 
     clean();
         
-    move(tiles_x, isEaten, isIn); // needes to get tiles_x for the calc
+    draw_move_options(tiles_x, isEaten, isIn); // needes to get tiles_x for the calc
     currTile.sign = true;
     currTile.draw();
     eatsPosition = true;
