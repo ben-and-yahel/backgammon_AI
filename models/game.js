@@ -203,10 +203,8 @@ function tile_to_triangle(tiles_x) {
         if(turn == "black")
         {
             let bot = new Bot();
-<<<<<<< HEAD
             console.log(cubes[0].state,cubes[1].state);
-=======
->>>>>>> f028afe1f91849dc2be8b69730a1b530c6c3c3f8
+
             let result = bot.turn(board, eaten_tiles);   
             board = result[1];
             eaten_tiles = result[2];
