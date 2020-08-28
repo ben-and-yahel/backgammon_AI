@@ -1,9 +1,10 @@
 /*
 the function is called once the player clicks on tile and wants to view his move options
 */
-double_cubes = -99;
-all_tiles_in = false;
+const none_cube_number = -99;
 const outNumber = -50;
+double_cubes = none_cube_number;
+
 function set_moves_by_cubes(tiles_x, minus) {
     moves = [];
     //TODO: duoble two moves bug
@@ -132,7 +133,7 @@ function tile_to_triangle(tiles_x) {
 
     // ------------ case: double situation where the cubes are the same-----------
     if (cubes[0].state == cubes[1].state) {
-        if (double_cubes == -99) 
+        if (double_cubes == none_cube_number) 
             double_cubes = 2;
 
         if (board[tiles_x].cube_number == 0 || board[tiles_x].cube_number == 100) {
@@ -141,7 +142,7 @@ function tile_to_triangle(tiles_x) {
             }
             else if (cubes[0].fill_color == "grey") {
                 cubes[1].dark_mode();
-                double_cubes = -99;
+                double_cubes = none_cube_number;
             }
             else{
                 cubes[0].dark_mode();
@@ -158,7 +159,7 @@ function tile_to_triangle(tiles_x) {
             else if (double_cubes == 0) {
                 cubes[0].dark_mode();
                 cubes[1].dark_mode();
-                double_cubes = -99;
+                double_cubes = none_cube_number;
             }
         }
     }
@@ -177,7 +178,7 @@ function tile_to_triangle(tiles_x) {
             if (board[tiles_x].length == 0)
                 continue;
             
-            if (board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color) {
+            if (board[tiles_x].cube_number !=none_cube_number && board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color) {
                 eaten_tiles[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
                 board[tiles_x].tiles.splice(0,1);
                 board[tiles_x].length = 0;
@@ -203,9 +204,11 @@ function tile_to_triangle(tiles_x) {
         if(turn == "black")
         {
             let bot = new Bot();
+            console.log(eaten_tiles);
             let result = bot.turn(board, eaten_tiles);   
             board = result[1];
             eaten_tiles = result[2];
+            console.log(eaten_tiles);
             role(); 
         }
     }
