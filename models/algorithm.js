@@ -6,6 +6,15 @@
 */
 class Bot{
     turn(board, eatArray){
+        if(eatArray["black"].length > 0)
+            return this.haveEatenTilesTurn(board, eatArray)
+        if(cubes[0].state == cubes[1].state)
+            return this.double(board, eatArray)
+        return this.ordinaryTurn(board, eatArray)
+    }
+
+    ordinaryTurn(board, eatArray)
+    {
         let eatArrayProp = eatArray.__proto__;
         let cube1 = cubes[0].state, cube2 = cubes[1].state;
         let value = [0,null];
@@ -24,7 +33,7 @@ class Bot{
             tempEatArray = result[1];
             if(checkIfEmpty(tempBoard,"black"))
             {
-                return [0,copyBoard(tempBoard),copyArray(tempEatArray)]
+                return [0,copyBoard(tempBoard),copyArray(tempEatArray,eatArrayProp)]
             }
             for(let y=0;y<tempBoard.length;y++)
             {
@@ -39,6 +48,10 @@ class Bot{
                     continue;
                 newBoard  = result[0];
                 newEatArray = result[1];
+                if(checkIfEmpty(newBoard,"black"))
+                {
+                    return [0,copyBoard(tempBoard),copyArray(tempEatArray,eatArrayProp)]
+                }
                 let newValue = this.evaluate();
                 if(value[0] < newValue)
                     value = [newValue,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)];
@@ -46,6 +59,106 @@ class Bot{
         }
         return value[1] == null ? [0,board,eatArray] : value;
     }
+    double(board, eatArray)
+    {
+        let result = this.ordinaryTurn(board,eatArray);
+        let newBoard  = result[1];
+        let newEatArray = result[2];
+        return this.ordinaryTurn(newBoard,newEatArray);
+    }
+    haveEatenTilesTurn(board, eatArray)
+    {
+        let numberOfEatenTiles = eatArray["black"].length;
+        let eatArrayProp = eatArray.__proto__;
+        let cube1 = cubes[0].state, cube2 = cubes[1].state;
+        let value = [0,null];
+        let turns = 2
+        let state = 0;
+        let double = false;
+        if(cube1 == cube2){
+            turns = 4;
+            double = true;
+        }
+        minus = -1;  //In some scenarios we need to reverse the calaculation of the move
+        tile = 11;
+        moves = set_moves_by_cubes(tile,minus);
+        let tiles_x = moves[state][0];
+        for(let i=0;i<numberOfEatenTiles;i++)
+        {
+            let canGoIn = this.validMove(board, eatArray, tiles_x, state)
+            if(!canGoIn)
+                continue;
+            //getting tiles back in
+            if(eatArray["black"].length > 0)
+            {
+                eatArray["black"].splice(0,1);
+            }
+            if(board[tiles_x].length == 1 && "white" == board[tiles_x].tiles[0].color)
+            {
+                // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
+                eatArray[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
+                board[tiles_x].tiles = [];
+                board[tiles_x].length = 0;
+            }
+            board[tiles_x].tiles.push(board[tile].tiles.splice(0,1)[0]); //ads the new tile to the triangle
+            board[tiles_x].length += 1;
+            if(!double)
+            {
+                state++;
+            }
+            turns--;
+            if(turns <= 0)
+            {
+                break;
+            }
+        }
+        if(turns == 0 || eatArray["black"].length > 0)
+        {
+            return [0,board,eatArray]
+        }
+        if(turns % 2 == 0)
+        {
+            return this.ordinaryTurn(board,eatArray);
+        }
+        let tempBoard  = copyBoard(board);
+        let tempEatArray = copyArray(eatArray, eatArrayProp);
+        if(turns > 1)
+        {
+            let result = this.ordinaryTurn(board,eatArray);
+            tempBoard  = result[1];
+            tempEatArray = result[2];
+        }
+        for(let y=0;y<tempBoard.length;y++)
+        {
+            if(tempBoard[y].length <= 0)
+                continue;
+            if(tempBoard[y].tiles[0].color == "white")
+                continue;
+            let newBoard = copyBoard(tempBoard);//copying array
+            let newEatArray = copyArray(tempEatArray,eatArrayProp);
+            result = this.move(newBoard, newEatArray, y, cube2, 1)
+            if(result == null)
+                continue;
+            newBoard  = result[0];
+            newEatArray = result[1];
+            if(checkIfEmpty(newBoard,"black"))
+            {
+                return [0,copyBoard(tempBoard),copyArray(tempEatArray,eatArrayProp)]
+            }
+            let newValue = this.evaluate();
+            if(value[0] < newValue)
+                value = [newValue,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)];
+        }
+        return value[1] == null ? [0,tempBoard,tempEatArray] : value;
+    }
+
+
+
+
+
+
+
+
     /*
     evaluate function - evaluating how good is this move going to be
     */
@@ -86,11 +199,7 @@ class Bot{
                     board[tile].length -= 1;
                 }
                 else
-                {//getting tiles back in
-                    if(eat["black"].length > 0)
-                    {
-                        eat["black"].splice(0,1);
-                    }
+                {
                     if(board[tiles_x].length == 1 && "white" == board[tiles_x].tiles[0].color)
                     {
                         // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
