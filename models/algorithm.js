@@ -62,13 +62,14 @@ class Bot{
         if (moves[state][0] > 23 && minus == 1)
             moves[state] = [11 - (moves[state][0] % 12)];
         let tiles_x = moves[state][0];
-        if(!this.validMove(board, tiles_x, state))
+        if(!this.validMove(board, eat, tiles_x, state))
             return null;
         
 
 
             
             //finding the fartest tile in the house
+            //getting tiles out
             let fartest = 0;
             if(this.check_tiles_in(board) == true){
                 for(let i = 0; i < 6; i++)
@@ -85,7 +86,11 @@ class Bot{
                     board[tile].length -= 1;
                 }
                 else
-                {
+                {//getting tiles back in
+                    if(eat["black"].length > 0)
+                    {
+                        eat["black"].splice(0,1);
+                    }
                     if(board[tiles_x].length == 1 && "white" == board[tiles_x].tiles[0].color)
                     {
                         // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
@@ -155,7 +160,7 @@ class Bot{
         
         return [board,eat];
     }
-    validMove(board, number, move_number) {
+    validMove(board, eat, number, move_number) {
         if(!(number < 0 && this.check_tiles_in(board) == true)){
             if (number > 23 || number < 0) {
                 return false;
@@ -163,6 +168,13 @@ class Bot{
         }    
         else{
             return true;
+        }
+        if(eat["black"].length > 0)
+        {
+            if(!(number >= 12 && number <= 17))
+            {
+                return false;
+            }
         }
         if(board[number].tiles.length <= 1)
         {
