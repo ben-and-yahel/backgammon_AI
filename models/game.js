@@ -3,6 +3,7 @@ the function is called once the player clicks on tile and wants to view his move
 */
 const none_cube_number = -99;
 const outNumber = -50;
+const special_double = 100;
 double_cubes = none_cube_number;
 
 function set_moves_by_cubes(tiles_x, minus) {
@@ -56,8 +57,8 @@ function move(tiles_x, isEaten, isIn) {
         if(moves.length > 1 && i == moves.length-1 && succseed == 0) // In case of the first and second move dosen't work
             break;
         board[moves[i]].sign = true;
-        if (moves.length == 1) {
-            board[moves[i]].cube_number = 100; // stands for turn pass after the move
+        if (moves.length == 1) { // spicial case were there is double and the second move is like the third
+            board[moves[i]].cube_number = special_double; // stands for turn pass after the move
         } else {
             board[moves[i]].cube_number = i;
         }
@@ -136,7 +137,7 @@ function tile_to_triangle(tiles_x) {
         if (double_cubes == none_cube_number) 
             double_cubes = 2;
 
-        if (board[tiles_x].cube_number == 0 || board[tiles_x].cube_number == 100) {
+        if (board[tiles_x].cube_number == 0 || board[tiles_x].cube_number == special_double) {
             if (double_cubes > 0) {
                 double_cubes -= 1;
             }
@@ -164,7 +165,7 @@ function tile_to_triangle(tiles_x) {
         }
     }
     // ------------ case: if player picking the last option of the cube is need spicial case-----------
-    else if (board[tiles_x].cube_number == 2 || board[tiles_x].cube_number==100) { //TODO: change magic numbers!!
+    else if (board[tiles_x].cube_number == 2 || board[tiles_x].cube_number==special_double) { //TODO: change magic numbers!!
         cubes[0].dark_mode();
         cubes[1].dark_mode();
     }
