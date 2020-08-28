@@ -68,25 +68,34 @@ class Bot{
         let value = [0,null];
         let turns = 2
         let state = 0;
+        let stateUsed = 0;
         let double = false;
         if(cube1 == cube2){
             turns = 4;
             double = true;
         }
-        minus = -1;  //In some scenarios we need to reverse the calaculation of the move
-        tile = 11;
-        moves = set_moves_by_cubes(tile,minus);
+        let minus = 1;  //In some scenarios we need to reverse the calaculation of the move
+        let tile = 11;
+        let moves = set_moves_by_cubes(tile,minus);
         let tiles_x = moves[state][0];
         for(let i=0;i<numberOfEatenTiles;i++)
         {
+            if(state > 1)
+                return [0,board,eatArray];
+            tiles_x = moves[state][0];
             let canGoIn = this.validMove(board, eatArray, tiles_x, state)
-            if(!canGoIn)
+            if(!canGoIn){
+                if(!double)
+                {
+                    state++;
+                    if(stateUsed == 0)  
+                        stateUsed = state;
+                }
+                i--;
                 continue;
-            //getting tiles back in
-            if(eatArray["black"].length > 0)
-            {
-                eatArray["black"].splice(0,1);
             }
+                
+            
             if(board[tiles_x].length == 1 && "white" == board[tiles_x].tiles[0].color)
             {
                 // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
@@ -94,11 +103,13 @@ class Bot{
                 board[tiles_x].tiles = [];
                 board[tiles_x].length = 0;
             }
-            board[tiles_x].tiles.push(board[tile].tiles.splice(0,1)[0]); //ads the new tile to the triangle
+            //getting tiles back in
+            board[tiles_x].tiles.push(eatArray["black"].splice(0,1)[0]); //ads the new tile to the triangle
             board[tiles_x].length += 1;
             if(!double)
             {
                 state++;
+                stateUsed = state > 1 ? stateUsed : state;
             }
             turns--;
             if(turns <= 0)
@@ -130,7 +141,7 @@ class Bot{
                 continue;
             let newBoard = copyBoard(tempBoard);//copying array
             let newEatArray = copyArray(tempEatArray,eatArrayProp);
-            result = this.move(newBoard, newEatArray, y, cube2, 1)
+            let result = this.move(newBoard, newEatArray, y, stateUsed == 0 ? cube2 : cube1, stateUsed == 0 ? 1 : 0)
             if(result == null)
                 continue;
             newBoard  = result[0];
