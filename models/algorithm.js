@@ -70,7 +70,7 @@ class Bot{
         let state = 0;
         let stateUsed = 0;
         let double = false;
-        if(cube1 == cube2){
+        if(cube1 == cube2){//if double
             turns = 4;
             double = true;
         }

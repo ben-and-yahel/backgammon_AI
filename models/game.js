@@ -26,8 +26,23 @@ function set_moves_by_cubes(tiles_x, minus) {
     }
     return moves;
 }
-function draw_move_options(tiles_x, isEaten, isIn) {
+function draw_move_options(tiles_x, tiles_y, isEaten, isIn) {
 
+    if (isEaten)
+    {
+        if (eaten_tiles[turn][0].color != turn) {
+            return;
+        }
+        currTile = eaten_tiles[turn][0];
+    }
+    else if (board[tiles_x].tiles[tiles_y].color != turn) {
+        return;
+    }
+    else
+        currTile = board[tiles_x].tiles[tiles_y];
+
+    clean();
+    
     minus = 1;  //In some scenarios we need to reverse the calaculation of the move
     if (!isEaten && (currTile.color == "black" && tiles_x <12 || currTile.color == "white" && tiles_x >=12)) 
         minus = -1;
@@ -64,29 +79,11 @@ function draw_move_options(tiles_x, isEaten, isIn) {
         board[moves[i]].draw();
         succseed++;
     }
-}
-
-function check_move_options(tiles_x, tiles_y, isEaten, isIn){
-    if (isEaten)
-    {
-        if (eaten_tiles[turn][0].color != turn) {
-            return;
-        }
-        currTile = eaten_tiles[turn][0];
-    }
-    else if (board[tiles_x].tiles[tiles_y].color != turn) {
-        return;
-    }
-    else
-        currTile = board[tiles_x].tiles[tiles_y];
-
-    clean();
-        
-    draw_move_options(tiles_x, isEaten, isIn); // needes to get tiles_x for the calc
     currTile.sign = true;
     currTile.draw();
     eatsPosition = true;
 }
+
 function tile_to_triangle(tiles_x) {
     
     let tiles_location = find_sign_tile();
@@ -273,7 +270,7 @@ function mouseClick(e) {
 
     
     else if(cordinates  && (tiles_x == false || board[tiles_x].cube_number < 0)){
-        check_move_options(cordinates[0], cordinates[1], cordinates[2], isIn); // cordinates => [tiles_X, tiles_Y, isEaten]
+        draw_move_options(cordinates[0], cordinates[1], cordinates[2], isIn); // cordinates => [tiles_X, tiles_Y, isEaten]
     }
     else if(currTile.sign == true || tiles_x == outNumber) { // sign == is marked and was clicked
         if(tiles_x !== false)
