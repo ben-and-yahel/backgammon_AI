@@ -259,8 +259,6 @@ function mouseClick(e) {
 
     cordinates = find_tile_by_cordinates(mouse_x, mouse_y);
     tiles_x = find_triangle_by_cordinates(mouse_x, mouse_y);
-    if(isBorderClicked)
-        tiles_x = outNumber;
     if (find_sign_tile()[0] == cordinates[0]) {
         clean();
     }
@@ -268,6 +266,8 @@ function mouseClick(e) {
     {
         alert("you have eaten Tile!");
     }
+    else if(isBorderClicked)
+        tiles_x = outNumber;    
 
     
     else if(cordinates  && (tiles_x == false || board[tiles_x].cube_number < 0)){
