@@ -91,6 +91,9 @@ class Bot{
                     if(stateUsed == 0)  
                         stateUsed = state;
                 }
+                else{
+                    return [0,board,eatArray];
+                }
                 i--;
                 continue;
             }
