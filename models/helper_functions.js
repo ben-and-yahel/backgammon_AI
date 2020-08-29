@@ -47,7 +47,6 @@ function check_border_by_cordinates(mouse_x, mouse_y) {
     }
 }
 function check_tiles_in(color) {
-    return false;
     let tiles_start = color == "black" ? 6 : 0; 
     for (let tiles_x = tiles_start; tiles_x < board.length; tiles_x++) {
         if (board[tiles_x].tiles == [] || (color == "white" && tiles_x>11 && tiles_x<18)) {
