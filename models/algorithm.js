@@ -185,10 +185,7 @@ class Bot{
         let tiles_x = moves[state][0];
         if(!this.validMove(board, eat, tiles_x, state))
             return null;
-        
-
-
-            
+              
             //finding the fartest tile in the house
             //getting tiles out
             let fartest = 0;
@@ -233,47 +230,6 @@ class Bot{
                 board[tile].length -= 1;
                 board[tiles_x].length += 1;
             }
-        
-        
-            /*if (cubes[0].state == cubes[1].state) {
-                if (double_cubes == -99) 
-                    double_cubes = 2;
-        
-                if (board[tiles_x].cube_number == 0 || board[tiles_x].cube_number == 100) {
-                    if (double_cubes > 0) {
-                        double_cubes -= 1;
-                    }
-                    else if (cubes[0].fill_color == "grey") {
-                        cubes[1].dark_mode();
-                        double_cubes = -99;
-                    }
-                    else{
-                        cubes[0].dark_mode();
-                    }
-                }
-                else if(board[tiles_x].cube_number == 1){
-                    if (double_cubes == 2) {
-                        double_cubes = 0;
-                    }
-                    else if (double_cubes == 1) {
-                        double_cubes = 0;
-                        cubes[0].dark_mode();
-                    }
-                    else if (double_cubes == 0) {
-                        cubes[0].dark_mode();
-                        cubes[1].dark_mode();
-                        double_cubes = -99;
-                    }
-                }
-            }
-            else if (board[tiles_x].cube_number == 2 || board[tiles_x].cube_number==100) {
-                cubes[0].dark_mode();
-                cubes[1].dark_mode();
-            }
-            
-            else{
-                cubes[board[tiles_x].cube_number].dark_mode();
-            }*/
         
         return [board,eat];
     }
