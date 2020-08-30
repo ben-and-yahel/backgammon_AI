@@ -27,6 +27,18 @@ html, body {
   font-size: 12px;
   border: none;
 }
+#botGame{
+  user-select: none;
+  position: absolute;
+  display: inline-block;
+  left: 705px;
+  top: 0px;
+  background-color: #ff9900;
+  color: white;
+  padding: 14px;
+  font-size: 12px;
+  border: none;
+}
 #template{
   user-select: none;
   position: absolute;

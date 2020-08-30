@@ -101,14 +101,27 @@ function role() {
     turn = turn == "white" ? "black" : "white";
     headline.innerHTML = "Its the "+turn+" turn!";
 }
-function BotGame()
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+async function BotGame()
 {
-    let b1 = new Bot();
-    let b2 = new Bot();
-    
+    let b1 = new Bot("white");
+    let b2 = new Bot("black");
+    while(!(checkWin("white") || checkWin("black"))){
+        let result = turn === "black" ? b2.turn(board, eaten_tiles) : b1.turn(board, eaten_tiles);
+        board = result[1];
+        eaten_tiles = result[2];
+        print_board(board);
+        role(); 
+        await sleep(100);
+    }
 }
+
 function checkWin(colorToCheck)
 {
+    if(eaten_tiles[colorToCheck].length > 0)
+        return false;
     for (let x = 0; x < board.length; x++) {
         if(board[x].length == 0)
             continue;
@@ -117,6 +130,7 @@ function checkWin(colorToCheck)
     }
     return true;
 }
+
 function arrayEquals(a, b) {
     return Array.isArray(a) &&
       Array.isArray(b) &&

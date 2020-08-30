@@ -1,10 +1,14 @@
 class Bot{
+    constructor(color)
+    {
+        this.color = color;
+    }
     /*
     The function get called when ever the bot have dont eaten tiles and dont have double
     the function will play an ordinary turn and find the best move for the player
     */
     turn(board, eatArray){
-        if(eatArray["black"].length > 0)
+        if(eatArray[this.color].length > 0)
             return this.haveEatenTilesTurn(board, eatArray)
         if(cubes[0].state == cubes[1].state)
             return this.double(board, eatArray)
@@ -20,7 +24,7 @@ class Bot{
         {
             if(board[x].length <= 0)
                 continue;
-            if(board[x].tiles[0].color == "white")
+            if(board[x].tiles[0].color != this.color)
                 continue;
             let tempBoard = copyBoard(board);//copying array
             let tempEatArray = copyArray(eatArray,eatArrayProp);
@@ -29,7 +33,7 @@ class Bot{
                 continue;
             tempBoard  = result[0];
             tempEatArray = result[1];
-            if(checkIfEmpty(tempBoard,"black"))
+            if(checkIfEmpty(tempBoard,this.color))
             {
                 return [0,copyBoard(tempBoard),copyArray(tempEatArray,eatArrayProp)]
             }
@@ -37,7 +41,7 @@ class Bot{
             {
                 if(tempBoard[y].length <= 0)
                     continue;
-                if(tempBoard[y].tiles[0].color == "white")
+                if(tempBoard[y].tiles[0].color != this.color)
                     continue;
                 let newBoard = copyBoard(tempBoard);//copying array
                 let newEatArray = copyArray(tempEatArray,eatArrayProp);
@@ -46,7 +50,7 @@ class Bot{
                     continue;
                 newBoard  = result[0];
                 newEatArray = result[1];
-                if(checkIfEmpty(newBoard,"black"))
+                if(checkIfEmpty(newBoard,this.color))
                 {
                     return [0,copyBoard(tempBoard),copyArray(tempEatArray,eatArrayProp)]
                 }
@@ -75,7 +79,7 @@ class Bot{
     */
     haveEatenTilesTurn(board, eatArray)
     {
-        let numberOfEatenTiles = eatArray["black"].length;
+        let numberOfEatenTiles = eatArray[this.color].length;
         let eatArrayProp = eatArray.__proto__;
         let cube1 = cubes[0].state, cube2 = cubes[1].state;
         let value = [0,null];
@@ -88,7 +92,7 @@ class Bot{
             double = true;
         }
         let minus = 1;  //In some scenarios we need to reverse the calaculation of the move
-        let tile = 11;
+        let tile = this.color == "black" ? 11 : -1;
         let moves = set_moves_by_cubes(tile,minus);
         let tiles_x = moves[state][0];
         for(let i=0;i<numberOfEatenTiles;i++)
@@ -112,7 +116,7 @@ class Bot{
             }
                 
             
-            if(board[tiles_x].length == 1 && "white" == board[tiles_x].tiles[0].color)
+            if(board[tiles_x].length == 1 && this.color != board[tiles_x].tiles[0].color)
             {
                 // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
                 eatArray[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
@@ -120,12 +124,15 @@ class Bot{
                 board[tiles_x].length = 0;
             }
             //getting tiles back in
-            board[tiles_x].tiles.push(eatArray["black"].splice(0,1)[0]); //ads the new tile to the triangle
+            board[tiles_x].tiles.push(eatArray[this.color].splice(0,1)[0]); //ads the new tile to the triangle
             board[tiles_x].length += 1;
             if(!double)
             {
                 state++;
-                stateUsed = state > 1 ? stateUsed : state;
+                if(state == 1)
+                    stateUsed = 0;
+                else if(state > 1)
+                    stateUsed = 1;
             }
             turns--;
             if(turns <= 0)
@@ -133,11 +140,11 @@ class Bot{
                 break;
             }
         }
-        if(turns == 0 || eatArray["black"].length > 0)
+        if(turns == 0 || eatArray[this.color].length > 0)
         {
             return [0,board,eatArray]
         }
-        if(turns % 2 == 0)
+        if(turns % 2 === 0)
         {
             return this.ordinaryTurn(board,eatArray);
         }
@@ -153,7 +160,7 @@ class Bot{
         {
             if(tempBoard[y].length <= 0)
                 continue;
-            if(tempBoard[y].tiles[0].color == "white")
+            if(tempBoard[y].tiles[0].color != this.color)
                 continue;
             let newBoard = copyBoard(tempBoard);//copying array
             let newEatArray = copyArray(tempEatArray,eatArrayProp);
@@ -162,9 +169,9 @@ class Bot{
                 continue;
             newBoard  = result[0];
             newEatArray = result[1];
-            if(checkIfEmpty(newBoard,"black"))
+            if(checkIfEmpty(newBoard,this.color))
             {
-                return [0,copyBoard(tempBoard),copyArray(tempEatArray,eatArrayProp)]
+                return [0,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)]
             }
             let newValue = this.evaluate();
             if(value[0] < newValue)
@@ -177,26 +184,21 @@ class Bot{
     */
     evaluate(board, newBoard, eat, newEat)
     {
-        let haeMovedTHeLast = 10, haveEat = 5, haveOpenTilesInTheHouse = -5/* check if realy et someone */, HaveOpenTilesThatAtGreatRisk = , closedHouse;
-
-
-
-
-
-
-
-
-
+        //let haeMovedTHeLast = 10, haveEat = 5, haveOpenTilesInTheHouse = -5/* check if realy et someone */, HaveOpenTilesThatAtGreatRisk = 0, closedHouse;
         return Math.floor(Math.random()*10) + 1;
     }
     move(board, eat, tile, steps, state)
     {
-        minus = 1;  //In some scenarios we need to reverse the calaculation of the move
-        if (tile <12) 
+        let minus = 1;  //In some scenarios we need to reverse the calaculation of the move
+        if (this.color == "black" && tile <12 || this.color == "white" && tile >=12)
             minus = -1;
-        moves = set_moves_by_cubes(tile,minus);
-        if (moves[state][0] > 23 && minus == 1)
+        let moves = set_moves_by_cubes(tile,minus);
+        if (moves[state][0] > 23 && minus == 1 && this.color == "black")
             moves[state] = [11 - (moves[state][0] % 12)];
+        if (moves[state][0] > 11 && this.color == "white" && minus == 1)
+            moves[state] = [23 - (moves[state][0] % 12)]; 
+        if (moves[state][0] < 12 && this.color == "white" && minus == -1 && !this.check_tiles_in(board))
+            return null;
         let tiles_x = moves[state][0];
         if(!this.validMove(board, eat, tiles_x, state))
             return null;
@@ -205,12 +207,14 @@ class Bot{
             //getting tiles out
             let fartest = 0;
             if(this.check_tiles_in(board) == true){
-                for(let i = 0; i < 6; i++)
+                let start = this.color === "black" ? 0 : 12;
+                let end = this.color === "black" ? 6 : 18;
+                for(let i = start; i < end; i++)
                 {
-                    if(board[i].length > 0 && board[i].tiles[0].color === "black")
+                    if(board[i].length > 0 && board[i].tiles[0].color === this.color)
                         fartest = i;
                 }
-                if(tiles_x < 0){
+                if((tiles_x < 0 && this.color == "black") || (tiles_x < 12 && this.color == "white")){
                     if(tile < fartest)
                     {
                         return null
@@ -220,7 +224,7 @@ class Bot{
                 }
                 else
                 {
-                    if(board[tiles_x].length == 1 && "white" == board[tiles_x].tiles[0].color)
+                    if(board[tiles_x].length == 1 && this.color != board[tiles_x].tiles[0].color)
                     {
                         // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
                         eat[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
@@ -234,7 +238,7 @@ class Bot{
             }
             else if(tiles_x >= 0)
             {
-                if(board[tiles_x].length == 1 && "white" == board[tiles_x].tiles[0].color)
+                if(board[tiles_x].length == 1 && this.color != board[tiles_x].tiles[0].color)
                 {
                     // tile_out => {"black":[Tile, Tile], "white":[Tile, Tile]}
                     eat[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
@@ -249,7 +253,7 @@ class Bot{
         return [board,eat];
     }
     validMove(board, eat, number, move_number) {
-        if(!(number < 0 && this.check_tiles_in(board) == true)){
+        if(!(((number < 0 && this.color == "black") || (number < 12 && this.color == "white")) && this.check_tiles_in(board) == true)){
             if (number > 23 || number < 0) {
                 return false;
             }
@@ -257,19 +261,30 @@ class Bot{
         else{
             return true;
         }
-        if(eat["black"].length > 0)
+        if(eat[this.color].length > 0)
         {
-            if(!(number >= 12 && number <= 17))
+            if(this.color == "black")
             {
-                return false;
+                if(!(number >= 12 && number <= 17))
+                {
+                    return false;
+                }
             }
+            else
+            {
+                if(!(number >= 0 && number <= 5))
+                {
+                    return false;
+                }
+            }
+            
         }
         if(board[number].tiles.length <= 1)
         {
             return true;
         }
         
-        if(board[number].tiles[0].color == "white")
+        if(board[number].tiles[0].color != this.color)
         {
             return false;
         }
@@ -277,17 +292,17 @@ class Bot{
         return true;
     }
     check_tiles_in(board) {
-        let tiles_start = 6; 
+        let tiles_start = this.color == "black" ? 6 : 0; 
         for (let tiles_x = tiles_start; tiles_x < board.length; tiles_x++) {
-            if (board[tiles_x].tiles == []) {
+            if (board[tiles_x].tiles == [] || (this.color == "white" && tiles_x>11 && tiles_x<18)) {
                 continue;
             }
             for (let tiles_y = 0; tiles_y < board[tiles_x].tiles.length; tiles_y++) {
-                if (board[tiles_x].tiles[tiles_y].color == "black") {
+                if (board[tiles_x].tiles[tiles_y].color == this.color) {
                     return false;
                 }
             }
-        }
-        return true;
+    }
+    return true;
     }
 }
