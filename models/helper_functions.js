@@ -101,6 +101,12 @@ function role() {
     turn = turn == "white" ? "black" : "white";
     headline.innerHTML = "Its the "+turn+" turn!";
 }
+function BotGame()
+{
+    let b1 = new Bot();
+    let b2 = new Bot();
+    
+}
 function checkWin(colorToCheck)
 {
     for (let x = 0; x < board.length; x++) {

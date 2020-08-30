@@ -1,4 +1,8 @@
 class Bot{
+    /*
+    The function get called when ever the bot have dont eaten tiles and dont have double
+    the function will play an ordinary turn and find the best move for the player
+    */
     turn(board, eatArray){
         if(eatArray["black"].length > 0)
             return this.haveEatenTilesTurn(board, eatArray)
@@ -53,6 +57,10 @@ class Bot{
         }
         return value[1] == null ? [0,board,eatArray] : value;
     }
+    /*
+    The function get called when ever the bot have double on his turn
+    the function will dill with double (4 moves) and find the best move for the player
+    */
     double(board, eatArray)
     {
         let result = this.ordinaryTurn(board,eatArray);
@@ -60,6 +68,11 @@ class Bot{
         let newEatArray = result[2];
         return this.ordinaryTurn(newBoard,newEatArray);
     }
+    /*
+    The function get called when ever the bot have eaten tiles
+    the function will force the bot to return the eaten tiles
+    with the remaining rolls of dice as best as it can
+    */
     haveEatenTilesTurn(board, eatArray)
     {
         let numberOfEatenTiles = eatArray["black"].length;
@@ -159,19 +172,21 @@ class Bot{
         }
         return value[1] == null ? [0,tempBoard,tempEatArray] : value;
     }
-
-
-
-
-
-
-
-
     /*
     evaluate function - evaluating how good is this move going to be
     */
-    evaluate(board)
+    evaluate(board, newBoard, eat, newEat)
     {
+        let haeMovedTHeLast = 10, haveEat = 5, haveOpenTilesInTheHouse = -5/* check if realy et someone */, HaveOpenTilesThatAtGreatRisk = , closedHouse;
+
+
+
+
+
+
+
+
+
         return Math.floor(Math.random()*10) + 1;
     }
     move(board, eat, tile, steps, state)
@@ -185,7 +200,7 @@ class Bot{
         let tiles_x = moves[state][0];
         if(!this.validMove(board, eat, tiles_x, state))
             return null;
-              
+
             //finding the fartest tile in the house
             //getting tiles out
             let fartest = 0;
