@@ -200,20 +200,33 @@ class Bot{
         let haveClosed = opens.differences(closed).length > 0;
         let haveEat = eat[enemyColor].length < newEat[enemyColor].length;
         
+        let finaleValue = 0;
+
+        let check = false;
         
-        if(haveEat && houseOpen.length > 0)//אכל ויש בבית מקומות פתוחים
+        if(haveEat)//אכל ויש בבית מקומות פתוחים
         {
             //evaluate
+            finaleValue += 3;
+            if(houseOpen.length > 0)
+                finaleValue = finaleValue - (3 * (houseOpen.length/6.0));
+            check = true;
         }
         if(haveClosed)//סגר בית
         {
             //evaluate
+            finaleValue += 5;
+            check = true;
         }
         if(fartest != newFartest)//קידם את האחרון
         {
             //evaluate
+            finaleValue += 2
+            check = true;
         }
-                return Math.floor(Math.random()*10) + 1;
+        if(!check)
+            return Math.random()
+        return finaleValue;
 
     }
     move(b, eat, tile, steps, state)
