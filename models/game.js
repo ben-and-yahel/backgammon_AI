@@ -59,6 +59,9 @@ function draw_move_options(tiles_x, tiles_y, isEaten, isIn) {
             continue;
         
         if (isIn && ((turn=="black" && moves[i] < 0) || (turn == "white" && moves[i] < 12))){
+            // if (i == 2) 
+            //     continue;
+            
             borderDraw = true;
             continue;
         } 
@@ -83,7 +86,77 @@ function draw_move_options(tiles_x, tiles_y, isEaten, isIn) {
     currTile.draw();
     eatsPosition = true;
 }
+function cubes_darker(tiles_x) {
+        // ------------ case: double situation where the cubes are the same-----------
+        if (cubes[0].state == cubes[1].state) {
+            if (double_cubes == none_cube_number) 
+                double_cubes = 2;
+    
+            if (board[tiles_x].cube_number == 0 || board[tiles_x].cube_number == special_double) {
+                if (double_cubes > 0) {
+                    double_cubes -= 1;
+                }
+                else if (cubes[0].fill_color == "grey") {
+                    cubes[1].dark_mode();
+                    double_cubes = none_cube_number;
+                }
+                else{
+                    cubes[0].dark_mode();
+                }
+            }
+            else if(board[tiles_x].cube_number == 1){
+                if (double_cubes == 2) {
+                    double_cubes = 0;
+                }
+                else if (double_cubes == 1) {
+                    double_cubes = 0;
+                    cubes[0].dark_mode();
+                }
+                else if (double_cubes == 0) {
+                    cubes[0].dark_mode();
+                    cubes[1].dark_mode();
+                    double_cubes = none_cube_number;
+                }
+            }
+        }
+        // ------------ case: if player picking the last option of the cube is need spicial case-----------
+        else if (board[tiles_x].cube_number == 2 || board[tiles_x].cube_number == special_double) {
+            cubes[0].dark_mode();
+            cubes[1].dark_mode();
+        }
+        // ------------ case: usual case were the cube are getting dark mode -----------
+        else{
+            cubes[board[tiles_x].cube_number].dark_mode();
+        }
+            // ------------ case: we need to check if there is eaten tile in the move -----------
+        if (board[tiles_x].cube_number == 2 || (cubes[0].state == cubes[1].state && board[tiles_x].cube_number == 1)) {
+            for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
+                if (board[tiles_x].length == 0)
+                    continue;
+                
+                if (board[tiles_x].cube_number !=none_cube_number && board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color) {
+                    eaten_tiles[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
+                    board[tiles_x].tiles.splice(0,1);
+                    board[tiles_x].length = 0;
+                }
+            }
+        }
+}
+function out_cubes_darker(x_tile) {
+    exit_number = turn == "black" ? 0 : 11;
+    // if (x_tile - cubes[1].state - cubes[0].state <= exit_number) {
+    //     if (cubes[0].fill_color != "grey" && cubes[1].fill_color != "grey") {
+    //         board[23].cube_number = 2;
+    //     }
+    // }
+    if (cubes[0].fill_color != "grey" && x_tile - cubes[0].state <= exit_number) {
+        board[23].cube_number = 0;
+    }
+    if (cubes[1].fill_color != "grey" &&x_tile - cubes[1].state <= exit_number) {
+        board[23].cube_number = 1;
+    }
 
+}
 function tile_to_triangle(tiles_x) {
     
     let tiles_location = find_sign_tile();
@@ -93,6 +166,10 @@ function tile_to_triangle(tiles_x) {
     if (tiles_x == outNumber) {
         board[x_tile].tiles.splice(y_tile, 1); // delets the old tile
         board[x_tile].length -= 1;
+        eatsPosition = false;
+        out_cubes_darker(x_tile);
+        cubes_darker(23);
+        clean();
         if (cubes[0].fill_color == "grey" && cubes[1].fill_color == "grey") {
             role();
             if(turn == "black")
@@ -104,7 +181,6 @@ function tile_to_triangle(tiles_x) {
                 role(); 
             }
         }
-        eatsPosition = false;
         return;
     }
     // ------------ case: need to eat tile from the triangle -----------
@@ -124,64 +200,10 @@ function tile_to_triangle(tiles_x) {
     else
         board[tiles_x].tiles.push(board[x_tile].tiles[y_tile]); //ads the new tile to the triangle
 
-
     board[tiles_x].length += 1;
 
-    // ------------ case: double situation where the cubes are the same-----------
-    if (cubes[0].state == cubes[1].state) {
-        if (double_cubes == none_cube_number) 
-            double_cubes = 2;
-
-        if (board[tiles_x].cube_number == 0 || board[tiles_x].cube_number == special_double) {
-            if (double_cubes > 0) {
-                double_cubes -= 1;
-            }
-            else if (cubes[0].fill_color == "grey") {
-                cubes[1].dark_mode();
-                double_cubes = none_cube_number;
-            }
-            else{
-                cubes[0].dark_mode();
-            }
-        }
-        else if(board[tiles_x].cube_number == 1){
-            if (double_cubes == 2) {
-                double_cubes = 0;
-            }
-            else if (double_cubes == 1) {
-                double_cubes = 0;
-                cubes[0].dark_mode();
-            }
-            else if (double_cubes == 0) {
-                cubes[0].dark_mode();
-                cubes[1].dark_mode();
-                double_cubes = none_cube_number;
-            }
-        }
-    }
-    // ------------ case: if player picking the last option of the cube is need spicial case-----------
-    else if (board[tiles_x].cube_number == 2 || board[tiles_x].cube_number==special_double) {
-        cubes[0].dark_mode();
-        cubes[1].dark_mode();
-    }
-    // ------------ case: usual case were the cube are getting dark mode -----------
-    else{
-        cubes[board[tiles_x].cube_number].dark_mode();
-    }
-    // ------------ case: we need to check if there is eaten tile in the move -----------
-    if (board[tiles_x].cube_number == 2 || (cubes[0].state == cubes[1].state && board[tiles_x].cube_number == 1)) {
-        for (let tiles_x = 0; tiles_x < board.length; tiles_x++) {
-            if (board[tiles_x].length == 0)
-                continue;
-            
-            if (board[tiles_x].cube_number !=none_cube_number && board[tiles_x].length == 1 && currTile.color != board[tiles_x].tiles[0].color) {
-                eaten_tiles[board[tiles_x].tiles[0].color].push(board[tiles_x].tiles[0]);
-                board[tiles_x].tiles.splice(0,1);
-                board[tiles_x].length = 0;
-            }
-        }
-    }
-
+    //decides witch cubes to make draker.
+    cubes_darker(tiles_x);
 
     clean();
     // ------------ case: usual case were we delete the old tile from the array-----------
@@ -265,8 +287,12 @@ function mouseClick(e) {
     {
         alert("you have eaten Tile!");
     }
-    else if(isBorderClicked)
-        tiles_x = outNumber;    
+    if(isBorderClicked)
+    {
+            tiles_x = outNumber;
+            tile_to_triangle(tiles_x);    
+    }
+    
 
     
     else if(cordinates  && (tiles_x == false || board[tiles_x].cube_number < 0)){
