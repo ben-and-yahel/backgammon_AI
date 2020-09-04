@@ -54,7 +54,7 @@ class Bot{
                 {
                     return [0,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)]
                 }
-                let newValue = this.evaluate();
+                let newValue = this.evaluate(b,newBoard,e,newEatArray);
                 if(value[0] < newValue)
                     value = [newValue,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)];
             }
@@ -167,7 +167,7 @@ class Bot{
             {
                 return [0,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)]
             }
-            let newValue = this.evaluate();
+            let newValue = this.evaluate(b,newBoard,eatArray,newEatArray);
             if(value[0] < newValue)
                 value = [newValue,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)];
         }
@@ -190,7 +190,6 @@ class Bot{
             return ret;
         };
         //let haeMovedTHeLast = 10, haveEat = 5, haveOpenTilesInTheHouse = -5/* check if realy et someone */, HaveOpenTilesThatAtGreatRisk = 0, closedHouse;
-        return Math.floor(Math.random()*10) + 1;
         let enemyColor = this.color == "black" ? "white" : "black";
         let opens = findAllOpen(b, this.color);
         let closed = findAllClosed(newBoard, this.color);
@@ -214,6 +213,8 @@ class Bot{
         {
             //evaluate
         }
+                return Math.floor(Math.random()*10) + 1;
+
     }
     move(b, eat, tile, steps, state)
     {

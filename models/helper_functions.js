@@ -178,3 +178,66 @@ function checkIfEmpty(board,color){
     }
     return true;
 }
+function findAllOpen(board,color)
+{
+    let opens = [];
+    for(let i = 0; i < board.length; i++)
+    {
+        if(board[i].length == 1 && board[i].tiles[0].color == color)
+            opens.push(i);
+    }
+    return opens;
+}
+function findAllClosed(board,color)
+{
+    let closed = [];
+    for(let i = 0; i < board.length; i++)
+    {
+        if(board[i].length > 1 && board[i].tiles[0].color == color)
+            closed.push(i);
+    }
+    return closed;
+}
+function findHouseOpen(board,color)
+{
+    let start = color == "black" ? 0 : 12;
+    let end = color == "black" ? 6 : 18;
+    let opens = [];
+    for(let i = start; i < end; i++)
+    {
+        if(board[i].length == 1 && board[i].tiles[0].color == color)
+            opens.push(i);
+    }
+    return opens;
+}
+function findFartest(board,color)
+{
+    let start = color == "black" ? 12 : 0;
+    let end = color == "black" ? -1 : 11;
+    let opens = [];
+    let factor = 1;
+    for(let i = start; !(i == end && factor == -1); i = i + factor)
+    {
+        if(board[i].length > 0 && board[i].tiles[0].color == color)
+            return i;
+        if(i + factor == 23 && color == "black" && factor != -1){
+            i = 23;
+            if(board[i].length == 1 && board[i].tiles[0].color == color)
+                return i;
+            i = 11;
+            if(board[i].length == 1 && board[i].tiles[0].color == color)
+                return i;
+            factor = -1;
+        }
+        if(i + factor == 11 && color == "white" && factor != -1){
+            i = 11;
+            if(board[i].length == 1 && board[i].tiles[0].color == color)
+                return i;
+            i = 23;
+            if(board[i].length == 1 && board[i].tiles[0].color == color)
+                return i;
+            factor = -1;
+        }
+    }
+    return -1;
+}
