@@ -178,7 +178,7 @@ class Bot{
     */
     evaluate(b, newBoard, eat, newEat)
     {
-        Array.prototype.diff = function(arr2) {
+        Array.prototype.diff = function(arr2) {//find differences between two arrays
             var ret = [];
             this.sort();
             arr2.sort();
