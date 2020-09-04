@@ -178,7 +178,7 @@ class Bot{
     */
     evaluate(b, newBoard, eat, newEat)
     {
-        Array.prototype.diff = function(arr2) {//find differences between two arrays
+        Array.prototype.differences = function(arr2) {//find differences between two arrays
             var ret = [];
             this.sort();
             arr2.sort();
@@ -198,7 +198,7 @@ class Bot{
         let fartest = findFartest(b, this.color);
         let newFartest = findFartest(newBoard, this.color);
 
-        let haveClosed = opens.diff(closed).length > 0;
+        let haveClosed = opens.differences(closed).length > 0;
         let haveEat = eat[enemyColor].length < newEat[enemyColor].length;
         
         
@@ -245,7 +245,8 @@ class Bot{
                         fartest = i;
                 }
                 if((tiles_x < 0 && this.color == "black") || (tiles_x < 12 && this.color == "white")){
-                    if(tile < fartest)
+                    let addToStart = this.color == "black" ? 1 : -11;
+                    if(tile + addToStart < fartest + addToStart && steps > tile + addToStart)
                     {
                         return null
                     }
