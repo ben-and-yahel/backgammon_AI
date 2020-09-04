@@ -229,6 +229,76 @@ class Bot{
         return finaleValue;
 
     }
+    dist(tile)//distance from house
+    {
+        if(tile >= 12)
+            tile = 35 - tile;
+        return this.color == "black" ? 23 - tile : tile;
+    }
+    risk(board,tile)
+    {
+        if(board[tile].length == 0)
+            return -1;
+        if(board[tile].length > 1)
+            return 0;
+        let mightEat = []
+        let factor = this.color == "black"  ? 1 : -1;   
+        for (let x = tile; x < board.length && x > 0; x += factor) {
+            let i = x;
+            if(i > 11)
+                i = 35 - i;
+            if(board[i].length > 0 && board[i].tiles[0].color != this.color)
+                mightEat.push(i);
+        }
+        let chance = 0;
+        mightEat.forEach(enemy => {
+            let distenceOfEnemy = Math.abs(enemy - tile);
+            switch (distenceOfEnemy) {
+                case 1:
+                    chance += 11/36.0;
+                    break;
+                case 2:
+                    chance += 1/3.0
+                    break;
+                case 3:
+                    chance += 14/36.0
+                    break;
+                case 4:
+                case 5:
+                    chance += 5/12.0
+                    break;
+                case 6:
+                    chance += 17/36.0
+                    break;
+                case 7:
+                case 8:
+                    chance += 1/6.0
+                    break;
+                case 9:
+                    chance += 5/36.0
+                    break;
+                case 10:
+                    chance += 1/12.0
+                    break;
+                case 11:
+                    chance += 1/18.0
+                    break;
+                case 12:
+                    chance += 1/12.0
+                    break;
+                case 15:
+                case 16:
+                case 18:
+                case 20:
+                case 24:
+                    chance += 1/36.0
+                    break;
+                default:
+                    break;
+            }
+        });
+        return chance;
+    }
     move(b, eat, tile, steps, state)
     {
         if(cubes[0].state == cubes[1].state)
