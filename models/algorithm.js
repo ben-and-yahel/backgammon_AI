@@ -178,8 +178,42 @@ class Bot{
     */
     evaluate(b, newBoard, eat, newEat)
     {
+        Array.prototype.diff = function(arr2) {
+            var ret = [];
+            this.sort();
+            arr2.sort();
+            for(var i = 0; i < this.length; i += 1) {
+                if(arr2.indexOf(this[i]) > -1){
+                    ret.push(this[i]);
+                }
+            }
+            return ret;
+        };
         //let haeMovedTHeLast = 10, haveEat = 5, haveOpenTilesInTheHouse = -5/* check if realy et someone */, HaveOpenTilesThatAtGreatRisk = 0, closedHouse;
         return Math.floor(Math.random()*10) + 1;
+        let enemyColor = this.color == "black" ? "white" : "black";
+        let opens = findAllOpen(b, this.color);
+        let closed = findAllClosed(newBoard, this.color);
+        let houseOpen = findHouseOpen(newBoard, this.color);
+        let fartest = findFartest(b, this.color);
+        let newFartest = findFartest(newBoard, this.color);
+
+        let haveClosed = opens.diff(closed).length > 0;
+        let haveEat = eat[enemyColor].length < newEat[enemyColor].length;
+        
+        
+        if(haveEat && houseOpen.length > 0)//אכל ויש בבית מקומות פתוחים
+        {
+            //evaluate
+        }
+        if(haveClosed)//סגר בית
+        {
+            //evaluate
+        }
+        if(fartest != newFartest)//קידם את האחרון
+        {
+            //evaluate
+        }
     }
     move(b, eat, tile, steps, state)
     {
