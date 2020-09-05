@@ -19,7 +19,8 @@ class Bot{
     {
         let eatArrayProp = e.__proto__;
         let cube1 = cubes[0].state, cube2 = cubes[1].state;
-        let value = [0,null];
+        let value = [10,null];
+        let move1 = 0, move2 = 0;;
         for(let x=0;x<b.length;x++)
         {
             if(b[x].length <= 0)
@@ -33,6 +34,7 @@ class Bot{
                 continue;
             tempBoard  = result[0];
             tempEatArray = result[1];
+            move1 = result[2];
             if(checkIfEmpty(tempBoard,this.color))
             {
                 return [0,copyBoard(tempBoard),copyArray(tempEatArray,eatArrayProp)]
@@ -50,12 +52,13 @@ class Bot{
                     continue;
                 newBoard  = result[0];
                 newEatArray = result[1];
+                move2 = result[2];
                 if(checkIfEmpty(newBoard,this.color))
                 {
                     return [0,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)]
                 }
-                let newValue = this.evaluate(b,newBoard,e,newEatArray);
-                if(value[0] < newValue)
+                let newValue = this.evaluate(b,newBoard,e,newEatArray,move1,move2);
+                if(value[0] > newValue)
                     value = [newValue,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)];
             }
         }
@@ -83,7 +86,7 @@ class Bot{
         let numberOfEatenTiles = eatArray[this.color].length;
         let eatArrayProp = eatArray.__proto__;
         let cube1 = cubes[0].state, cube2 = cubes[1].state;
-        let value = [0,null];
+        let value = [10,null];
         let turns = 2
         let state = 0;
         let stateUsed = -1;
@@ -163,12 +166,13 @@ class Bot{
                 continue;
             newBoard  = result[0];
             newEatArray = result[1];
+            let moved = result[2];
             if(checkIfEmpty(newBoard,this.color))
             {
                 return [0,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)]
             }
-            let newValue = this.evaluate(b,newBoard,eatArray,newEatArray);
-            if(value[0] < newValue)
+            let newValue = this.evaluate(b,newBoard,eatArray,newEatArray,moved,null);
+            if(value[0] > newValue)
                 value = [newValue,copyBoard(newBoard),copyArray(newEatArray,eatArrayProp)];
         }
         return value[1] == null ? [0,tempBoard,tempEatArray] : value;
@@ -176,7 +180,7 @@ class Bot{
     /*
     evaluate function - evaluating how good is this move going to be
     */
-    evaluate(b, newBoard, eat, newEat)
+    evaluate(b, newBoard, eat, newEat, tileA,tileB)
     {
         Array.prototype.differences = function(arr2) {//find differences between two arrays
             var ret = [];
@@ -224,33 +228,77 @@ class Bot{
             finaleValue += 2
             check = true;
         }
+        let c = 0;
+        if(tileB)
+            c += this.risk(newBoard, newEat, tileB);
+        c += this.risk(newBoard, newEat, tileA)
+        console.log(c);
+        return c;
         if(!check)
             return Math.random()
         return finaleValue;
 
     }
-    dist(tile)//distance from house
+    dist(tile,color)//distance from house
     {
+        if(tile < 12 && this.check_tiles_in(board))
+            return -1;//change
+
+        let start = color == "black" ? 0 : 18
+        let end = color == "black" ? 5 : 23
         if(tile >= 12)
             tile = 35 - tile;
-        return this.color == "black" ? 23 - tile : tile;
+        if((color == "black" && tile >= 0 && tile <= 5) || (color == "white" && tile >= 18 && tile <= 23))
+            return 0;
+        let ret = color == "white" ? 18 - tile : tile - 5;
+        return ret <= 0 ? 0 : ret;
     }
-    risk(board,tile)
+    risk(board,eat,tile)
     {
+        if(tile < 12 && this.check_tiles_in(board))
+            return -10;
         if(board[tile].length == 0)
-            return -1;
+            return 10;
         if(board[tile].length > 1)
             return 0;
         let mightEat = []
-        let factor = this.color == "black"  ? 1 : -1;   
+        let factor = this.color == "white"  ? 1 : -1;   
         for (let x = tile; x < board.length && x > 0; x += factor) {
             let i = x;
             if(i > 11)
                 i = 35 - i;
-            if(board[i].length > 0 && board[i].tiles[0].color != this.color)
+            if(board[x].length > 0 && board[x].tiles[0].color != this.color)
                 mightEat.push(i);
         }
         let chance = 0;
+        let enemyColor = this.color == "black" ? "white" : "black";
+        let startHouse = this.color == "black" ? 0 : 12;
+        let endHouse = this.color == "black" ? 5 : 17;
+        if(eat[enemyColor].length > 0)
+        {
+           if(tile >= startHouse && tile <= endHouse)
+           {
+               let dTile = tile > 11 ? tile - 11 : tile + 1;
+               switch (dTile) {
+                case 1:
+                    chance += 11/36.0;
+                    break;
+                case 2:
+                    chance += 1/3.0
+                    break;
+                case 3:
+                    chance += 14/36.0
+                    break;
+                case 4:
+                case 5:
+                    chance += 5/12.0
+                    break;
+                case 6:
+                    chance += 17/36.0
+                    break;
+                } 
+            }
+        }
         mightEat.forEach(enemy => {
             let distenceOfEnemy = Math.abs(enemy - tile);
             switch (distenceOfEnemy) {
@@ -298,6 +346,25 @@ class Bot{
             }
         });
         return chance;
+    }
+    profit(board,newBoard,eat,newEat, tileA, tileB)
+    {
+        let enemyColor = this.color == "black" ? "white" : "black";
+        if(eat[enemyColor].length < newEat[enemyColor].length)
+        {
+
+        }
+        let opens = findAllOpen(newBoard, this.color);
+        let closed = findAllClosed(newBoard, this.color);
+        if(opens.length < closed.length)
+        {
+
+        }
+        let oldOpen = findAllOpen(board, this.color);
+        if(oldOpen.length < opens.length)
+        {
+
+        }
     }
     move(b, eat, tile, steps, state)
     {
@@ -365,7 +432,7 @@ class Bot{
                 b[tiles_x].length += 1;
             }
         
-        return [b,eat];
+        return [b,eat,tiles_x];
     }
     validMove(b, eat, number, move_number) {
         if(!(((number < 0 && this.color == "black") || (number < 12 && this.color == "white")) && this.check_tiles_in(b) == true)){
